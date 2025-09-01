@@ -5,7 +5,7 @@
 tag = "default";
 
 enable_projection = true;
-enable_collision_over_focal_length = false;
+enable_collision_over_focal_length = true;
 
 z = DANMAKU_FOCAL_LENGTH;
 xscale = 1;

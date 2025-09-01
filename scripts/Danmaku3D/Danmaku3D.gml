@@ -27,6 +27,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
     
     for(var _i = 0; _i < array_length(_insts); _i++){
         var _inst = _insts[_i];
+        _inst.enable_collision_over_focal_length = false;
         
         array_push(insts, {
             id : _inst.id,
@@ -42,7 +43,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
     function enable_projection(_bool){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
-            _inst.projection = _bool;
+            _inst.enable_projection = _bool;
         }
     }
     
