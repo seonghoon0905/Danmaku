@@ -1,7 +1,7 @@
 {
   "FolderOrderSettings":[
-    {"name":"AnimationCurves","order":3,"path":"folders/Danmaku/AnimationCurves.yy",},
-    {"name":"Objects","order":2,"path":"folders/Danmaku/Objects.yy",},
+    {"name":"AnimationCurves","order":4,"path":"folders/Danmaku/AnimationCurves.yy",},
+    {"name":"Objects","order":3,"path":"folders/Danmaku/Objects.yy",},
     {"name":"Bullets","order":2,"path":"folders/Danmaku/Objects/Bullets.yy",},
     {"name":"10","order":9,"path":"folders/Danmaku/Objects/Bullets/Bullets/10.yy",},
     {"name":"11","order":10,"path":"folders/Danmaku/Objects/Bullets/Bullets/11.yy",},
@@ -16,7 +16,8 @@
     {"name":"9","order":8,"path":"folders/Danmaku/Objects/Bullets/Bullets/9.yy",},
     {"name":"Cherries","order":1,"path":"folders/Danmaku/Objects/Bullets/Cherries.yy",},
     {"name":"GlowBullets","order":2,"path":"folders/Danmaku/Objects/Bullets/GlowBullets.yy",},
-    {"name":"Sprites","order":1,"path":"folders/Danmaku/Sprites.yy",},
+    {"name":"Scripts","order":1,"path":"folders/Danmaku/Scripts.yy",},
+    {"name":"Sprites","order":2,"path":"folders/Danmaku/Sprites.yy",},
     {"name":"DanmakuBullets","order":3,"path":"folders/Danmaku/Sprites/DanmakuBullets.yy",},
     {"name":"Bullets","order":1,"path":"folders/Danmaku/Sprites/DanmakuBullets/Bullets.yy",},
     {"name":"10","order":9,"path":"folders/Danmaku/Sprites/DanmakuBullets/Bullets/10.yy",},
