@@ -22,8 +22,7 @@ function make_sphere_danmaku(_x, _y, _circle_amount, _bullets_per_circle, _dir_o
         }
     }
     
-    var _pol =  new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts);
-    _pol.update_danmaku(true);
+    var _pol = new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts);
     
     return _pol;
 }

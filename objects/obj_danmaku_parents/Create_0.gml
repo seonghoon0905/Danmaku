@@ -4,8 +4,12 @@
 
 tag = "default";
 
-enable_3d = false;
-z = 400;
+enable_projection = true;
+enable_collision_over_focal_length = false;
+
+z = DANMAKU_FOCAL_LENGTH;
+xscale = 1;
+yscale = 1;
 
 direction_speed = 0;
 

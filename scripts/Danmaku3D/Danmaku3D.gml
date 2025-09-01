@@ -1,8 +1,4 @@
 function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) constructor{
-    enable_projection = true;
-    enable_collision_over_focal_length = false;
-    // When you make it true, bullets of danmaku never fadeout though their z positions cross over the focal_length
-    
     x = _x; 
     y = _y; 
     z = _z;
@@ -31,7 +27,6 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
     
     for(var _i = 0; _i < array_length(_insts); _i++){
         var _inst = _insts[_i];
-        _inst.enable_3d = true;
         
         array_push(insts, {
             id : _inst.id,
@@ -42,6 +37,13 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         
         var _dist = point_distance(x, y, _inst.x, _inst.y);
         far_dist = _dist > far_dist ? _dist : far_dist;
+    }
+    
+    function enable_collision_over_focal_length(_bool){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.enable_collision_over_focal_length = _bool;
+        }
     }
     
     function set_tag(_tag){
@@ -85,30 +87,55 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }
     }
     
+    function set_image_xscale(_xscale){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.xscale = _xscale;
+        }
+    }
+    
+    function add_image_xscale(_dxscale){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.xscale += _dxscale;
+        }
+    }
+    
+    function set_image_yscale(_yscale){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.yscale = _yscale;
+        }
+    }
+    
+    function add_image_yscale(_dyscale){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.yscale += _dyscale;
+        }
+    }
+    
     function set_image_scale(_scale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
-            _inst.image_xscale = _scale;
-            _inst.image_yscale = _scale;
+            _inst.xscale = _scale;
+            _inst.yscale = _scale;
         }
-        
-        image_scale = _scale;
     }
     
     function add_image_scale(_dscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
-            _inst.image_xscale += _dscale;
-            _inst.image_yscale += _dscale;
+            _inst.xscale += _dscale;
+            _inst.yscale += _dscale;
         }
-        
-        image_scale += _dscale;
     }
     
-    function set_particle(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _interval = 5, _life = 25, _col = c_white){
+    
+    function set_particle(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
-            set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale, _interval, _life, _col);
+            set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale, _alpha, _interval, _life, _col);
         }
     }
     
@@ -228,30 +255,6 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
             if(image_angle_sync){
                 var _dir = point_direction(x, y, _inst.x, _inst.y) + image_angle_sync_angle_adjust;
                 _inst.image_angle = _dir;
-            }
-            
-            if(enable_projection && _inst.z > DANMAKU_ZNEAR && _inst.z < DANMAKU_ZFAR){
-                var _scale = DANMAKU_FOCAL_LENGTH / _inst.z;
-                
-                _inst.image_xscale = _scale * image_scale;
-                _inst.image_yscale = _scale * image_scale;
-            }
-            
-            if(!enable_collision_over_focal_length){
-                var _epsilon = 1;
-                if(_inst.z > DANMAKU_FOCAL_LENGTH + _epsilon){
-                    _inst.mask_index = spr_danmaku_noone;
-                    _inst.image_alpha = _direct_alpha ? 0 : _inst.image_alpha;
-                }    
-                else{
-                    _inst.mask_index = _inst.sprite_index;
-                    _inst.image_alpha = _direct_alpha ? 1 : _inst.image_alpha;
-                }
-                
-                if(!_direct_alpha){
-                    var _alpha = _inst.z > DANMAKU_FOCAL_LENGTH + _epsilon ? DANMAKU_INCOLLIDABLE_BULLET_ALPHA : 1;
-                    _inst.image_alpha += (_alpha - _inst.image_alpha) / 10;
-                }                
             }
         }    
     }

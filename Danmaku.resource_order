@@ -1,6 +1,5 @@
 {
   "FolderOrderSettings":[
-    {"name":"Danmaku","order":1,"path":"folders/Danmaku.yy",},
     {"name":"AnimationCurves","order":3,"path":"folders/Danmaku/AnimationCurves.yy",},
     {"name":"Objects","order":2,"path":"folders/Danmaku/Objects.yy",},
     {"name":"Bullets","order":2,"path":"folders/Danmaku/Objects/Bullets.yy",},
@@ -206,8 +205,6 @@
     {"name":"obj_glow_danmaku_bullet_7","order":6,"path":"objects/obj_glow_danmaku_bullet_7/obj_glow_danmaku_bullet_7.yy",},
     {"name":"obj_glow_danmaku_bullet_8","order":7,"path":"objects/obj_glow_danmaku_bullet_8/obj_glow_danmaku_bullet_8.yy",},
     {"name":"obj_glow_danmaku_bullet_9","order":8,"path":"objects/obj_glow_danmaku_bullet_9/obj_glow_danmaku_bullet_9.yy",},
-    {"name":"obj_test","order":2,"path":"objects/obj_test/obj_test.yy",},
-    {"name":"rm_test","order":3,"path":"rooms/rm_test/rm_test.yy",},
     {"name":"Danmaku","order":1,"path":"scripts/Danmaku/Danmaku.yy",},
     {"name":"Danmaku3D","order":2,"path":"scripts/Danmaku3D/Danmaku3D.yy",},
     {"name":"Danmaku3DShapes","order":4,"path":"scripts/Danmaku3DShapes/Danmaku3DShapes.yy",},

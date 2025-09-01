@@ -10,7 +10,7 @@ if(z > DANMAKU_ZNEAR && z < DANMAKU_ZFAR){
         gpu_set_blendmode(bm_normal);
     }
     else{
-        if(enable_3d){
+        if(enable_projection){
             gpu_set_ztestenable(true);
             gpu_set_zwriteenable(true);
             gpu_set_alphatestenable(true);
@@ -19,7 +19,7 @@ if(z > DANMAKU_ZNEAR && z < DANMAKU_ZFAR){
          
         draw_self();
         
-        if(enable_3d){
+        if(enable_projection){
             gpu_set_ztestenable(false);
             gpu_set_zwriteenable(false);
             gpu_set_alphatestenable(false);

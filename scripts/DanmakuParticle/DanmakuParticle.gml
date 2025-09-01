@@ -1,4 +1,4 @@
-function set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _interval = 5, _life = 25, _col = c_white){
+function set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white){
     if(!ENABLE_PARTICLE_SYSTEM){
         return;
     }
@@ -15,7 +15,7 @@ function set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, 
         part_type_size_y(_type, image_yscale * _scale, image_yscale * _scale, _decrease_spd, 0);
         part_type_orientation(_type, image_angle, image_angle, 0, 0, 0);
         part_type_colour1(_type, _col == c_white ? image_blend : _col);
-        part_type_alpha2(_type, image_alpha, _fadeout ? 0 : image_alpha);
+        part_type_alpha2(_type, image_alpha * _alpha, _fadeout ? 0 : image_alpha * _alpha);
         part_type_blend(_type, _additive);
         part_type_life(_type, _life, _life);
         
@@ -34,6 +34,7 @@ function set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, 
         particle_position_noise = _position_noise;
         particle_additive = _additive;
         particle_scale = _scale;
+        particle_alpha = _alpha;
         particle_interval = _interval;
         particle_life = _life;   
         particle_color = _col;
