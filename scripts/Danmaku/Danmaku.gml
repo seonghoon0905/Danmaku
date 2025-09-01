@@ -119,10 +119,10 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
-    function set_particle(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _interval = 5, _life = 25, _col = c_white){
+    function set_particle(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
-            set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale, _interval, _life, _col);
+            set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale, _alpha, _interval, _life, _col);
         }
     }
 	
@@ -239,17 +239,18 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
             if(object_is_ancestor(_sub_inst.object_index, obj_danmaku_parents)){
                 _sub_inst.outsidekill = true;
                 
-                if(_inherit_particle && _sub_inst.particle_emitter != undefined){
-                    var _f = _sub_inst.particle_fadeout;
-                    var _sd = _sub_inst.particle_size_decrease;
-                    var _fn = _sub_inst.particle_position_noise;
-                    var _a = _sub_inst.particle_additive;
-                    var _s = _sub_inst.particle_scale;
-                    var _i = _sub_inst.particle_interval;
-                    var _l = _sub_inst.particle_life;
-                    var _sy = _sub_inst.particle_sync;
-                    var _col = _sub_inst.particle_color;
-                    set_danmaku_particle(_sub_inst, _f, _sd, _fn, _a, _s, _i, _l, _sy, _col);
+                if(_inherit_particle && _inst.particle_emitter != undefined){
+                    var _sy = _inst.particle_sync;
+                    var _f = _inst.particle_fadeout;
+                    var _sd = _inst.particle_size_decrease;
+                    var _pn = _inst.particle_position_noise;
+                    var _a = _inst.particle_additive;
+                    var _s = _inst.particle_scale;
+                    var _ap = _inst.particle_alpha;
+                    var _it = _inst.particle_interval;
+                    var _l = _inst.particle_life;
+                    var _col = _inst.particle_color;
+                    set_danmaku_particle(_sub_inst, _sy, _f, _sd, _pn, _a, _s, _ap, _it, _l, _col);
                 }
             }
             
