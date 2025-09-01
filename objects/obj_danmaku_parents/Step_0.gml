@@ -18,7 +18,7 @@ if(ENABLE_PARTICLE_SYSTEM && particle_emitter != undefined){
     part_emitter_region(global.danmaku_particle_system, particle_emitter, x - _dx, x + _dx, y - _dy, y + _dy, ps_shape_ellipse, ps_distr_linear);
 }
 
-if(enable_projection && z != DANMAKU_FOCAL_LENGTH){
+if(enable_projection && z != DANMAKU_FOCAL_LENGTH && z > DANMAKU_ZNEAR && z < DANMAKU_ZFAR){
     var _scale = DANMAKU_FOCAL_LENGTH / z;
     
     image_xscale = _scale * xscale;
