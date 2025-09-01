@@ -48,13 +48,6 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
-    function set_outsidekill(_outsidekill){
-        for(var _i = 0; _i < array_length(insts); _i++){
-            var _inst = insts[_i].id;
-            _inst.outsidekill = _outsidekill;
-        }
-    }
-    
     function set_image_angle_sync(_angle_adjust){
         image_angle_sync = true;
         image_angle_sync_angle_adjust = _angle_adjust;

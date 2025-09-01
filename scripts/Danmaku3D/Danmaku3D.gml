@@ -1,13 +1,11 @@
-function Danmaku3D(_x, _y, _z, _insts, _z_focal_length = true, _inside_rotation_param = undefined) constructor{
+function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) constructor{
     enable_projection = true;
-    enable_collision_over_focal_length = true;
+    enable_collision_over_focal_length = false;
     // When you make it true, bullets of danmaku never fadeout though their z positions cross over the focal_length
-    
-    focal_length = DANMAKU_SCREEN_WIDTH / (2 * dtan(DANMAKU_FOV / 2));
     
     x = _x; 
     y = _y; 
-    z = _z_focal_length ? focal_length : _z;
+    z = _z;
     
 	xscale = 1;
     yscale = 1;
@@ -34,7 +32,6 @@ function Danmaku3D(_x, _y, _z, _insts, _z_focal_length = true, _inside_rotation_
     for(var _i = 0; _i < array_length(_insts); _i++){
         var _inst = _insts[_i];
         _inst.enable_3d = true;
-        _inst.z = focal_length;
         
         array_push(insts, {
             id : _inst.id,
@@ -58,13 +55,6 @@ function Danmaku3D(_x, _y, _z, _insts, _z_focal_length = true, _inside_rotation_
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.additive = _additive;
-        }
-    }
-    
-    function set_outsidekill(_outsidekill){
-        for(var _i = 0; _i < array_length(insts); _i++){
-            var _inst = insts[_i].id;
-            _inst.outsidekill = _outsidekill;
         }
     }
     
@@ -223,7 +213,7 @@ function Danmaku3D(_x, _y, _z, _insts, _z_focal_length = true, _inside_rotation_
         rotate_inside_danmaku(self, inside_rotation);
 	}
     
-    function update_danmaku(){
+    function update_danmaku(_direct_alpha = false){
         var _len = array_length(insts);
         
         for(var _i = 0; _i < _len; _i++){
@@ -241,7 +231,7 @@ function Danmaku3D(_x, _y, _z, _insts, _z_focal_length = true, _inside_rotation_
             }
             
             if(enable_projection && _inst.z > DANMAKU_ZNEAR && _inst.z < DANMAKU_ZFAR){
-                var _scale = focal_length / _inst.z;
+                var _scale = DANMAKU_FOCAL_LENGTH / _inst.z;
                 
                 _inst.image_xscale = _scale * image_scale;
                 _inst.image_yscale = _scale * image_scale;
@@ -249,16 +239,19 @@ function Danmaku3D(_x, _y, _z, _insts, _z_focal_length = true, _inside_rotation_
             
             if(!enable_collision_over_focal_length){
                 var _epsilon = 1;
-                var _alpha = _inst.z > focal_length + _epsilon ? DANMAKU_INCOLLIDABLE_BULLET_ALPHA : 1;
-                
-                if(_inst.z > focal_length + _epsilon){
+                if(_inst.z > DANMAKU_FOCAL_LENGTH + _epsilon){
                     _inst.mask_index = spr_danmaku_noone;
+                    _inst.image_alpha = _direct_alpha ? 0 : _inst.image_alpha;
                 }    
                 else{
                     _inst.mask_index = _inst.sprite_index;
+                    _inst.image_alpha = _direct_alpha ? 1 : _inst.image_alpha;
                 }
                 
-                _inst.image_alpha += (_alpha - _inst.image_alpha) / 10;
+                if(!_direct_alpha){
+                    var _alpha = _inst.z > DANMAKU_FOCAL_LENGTH + _epsilon ? DANMAKU_INCOLLIDABLE_BULLET_ALPHA : 1;
+                    _inst.image_alpha += (_alpha - _inst.image_alpha) / 10;
+                }                
             }
         }    
     }

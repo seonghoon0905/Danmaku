@@ -31,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_danmaku_cherry",
-    "path":"sprites/spr_danmaku_cherry/spr_danmaku_cherry.yy",
+    "name":"spr_danmaku_pink_cherry",
+    "path":"sprites/spr_danmaku_pink_cherry/spr_danmaku_pink_cherry.yy",
   },
   "spriteMaskId":null,
   "visible":true,

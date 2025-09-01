@@ -8,7 +8,7 @@ if(ENABLE_PARTICLE_SYSTEM && particle_emitter != undefined){
         part_type_size_x(particle_type, image_xscale * particle_scale, image_xscale * particle_scale, _decrease_spd, 0);
         _decrease_spd = particle_size_decrease ? -image_yscale / particle_life : 0;
         part_type_size_y(particle_type, image_yscale * particle_scale, image_yscale * particle_scale, _decrease_spd, 0);
-        part_type_orientation(_type, image_angle, image_angle, 0, 0, 0);
+        part_type_orientation(particle_type, image_angle, image_angle, 0, 0, 0);
         part_type_color1(particle_type, particle_color == c_white ? image_blend : particle_color);
         part_type_alpha2(particle_type, image_alpha, particle_fadeout ? 0 : image_alpha);
     }

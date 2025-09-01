@@ -31,8 +31,8 @@
   "resourceVersion":"2.0",
   "solid":false,
   "spriteId":{
-    "name":"spr_danmaku_bullet_1",
-    "path":"sprites/spr_danmaku_bullet_1/spr_danmaku_bullet_1.yy",
+    "name":"spr_danmaku_pink_bullet_9",
+    "path":"sprites/spr_danmaku_pink_bullet_9/spr_danmaku_pink_bullet_9.yy",
   },
   "spriteMaskId":null,
   "visible":true,

@@ -1,10 +1,10 @@
-function make_circle_danmaku(_x, _y, _n, _dir_offset, _radius, _layer, _obj){
+function make_circle_danmaku(_x, _y, _n, _dir_offset, _size, _layer, _obj){
 	var _insts = [];
 	var _start_dir = _dir_offset;
 	var _end_dir = _dir_offset + 360;
 	for(var _dir = _start_dir; _dir < _end_dir; _dir += 360 / _n){
-		var _xx = _x + lengthdir_x(_radius, _dir);
-		var _yy = _y + lengthdir_y(_radius, _dir);
+		var _xx = _x + lengthdir_x(_size, _dir);
+		var _yy = _y + lengthdir_y(_size, _dir);
 		var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
 		array_push(_insts, _inst);
 	}
@@ -155,4 +155,23 @@ function make_shuriken_danmaku(_x, _y, _n, _bullets_per_line, _dir_offset, _size
         dir_offset : _dir_offset,
         size : _size,
     });
+}
+
+function make_lines_danmaku(_x, _y, _n, _bullets_per_line, _dir_offset, _size, _layer, _obj){
+    var _insts = [];
+    for(var _i = 0; _i < _n; _i++){
+        var _dir = lerp(_dir_offset, _dir_offset + 360, _i / _n);
+        for(var _j = 0; _j < _bullets_per_line; _j++){
+            if(_i != 0 && _j == 0){
+                continue;
+            }
+            var _len = lerp(0, _size, _j / (_bullets_per_line - 1));
+            var _xx = _x + lengthdir_x(_len, _dir);
+            var _yy = _y + lengthdir_y(_len, _dir);
+            var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
+            array_push(_insts, _inst);
+        }
+    }
+    
+    return new Danmaku(_x, _y, 0, _insts, true);
 }

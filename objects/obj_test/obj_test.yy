@@ -1,18 +1,18 @@
 {
   "$GMObject":"",
-  "%Name":"obj_danmaku_gray_cherry",
-  "eventList":[],
+  "%Name":"obj_test",
+  "eventList":[
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":0,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+    {"$GMEvent":"v1","%Name":"","collisionObjectId":null,"eventNum":0,"eventType":3,"isDnD":false,"name":"","resourceType":"GMEvent","resourceVersion":"2.0",},
+  ],
   "managed":true,
-  "name":"obj_danmaku_gray_cherry",
+  "name":"obj_test",
   "overriddenProperties":[],
   "parent":{
-    "name":"Cherries",
-    "path":"folders/Danmaku/Objects/Bullets/Cherries.yy",
+    "name":"Danmaku",
+    "path":"Danmaku.yyp",
   },
-  "parentObjectId":{
-    "name":"obj_danmaku_parents",
-    "path":"objects/obj_danmaku_parents/obj_danmaku_parents.yy",
-  },
+  "parentObjectId":null,
   "persistent":false,
   "physicsAngularDamping":0.1,
   "physicsDensity":0.5,
@@ -30,10 +30,7 @@
   "resourceType":"GMObject",
   "resourceVersion":"2.0",
   "solid":false,
-  "spriteId":{
-    "name":"spr_danmaku_gray_cherry",
-    "path":"sprites/spr_danmaku_gray_cherry/spr_danmaku_gray_cherry.yy",
-  },
+  "spriteId":null,
   "spriteMaskId":null,
   "visible":true,
 }
