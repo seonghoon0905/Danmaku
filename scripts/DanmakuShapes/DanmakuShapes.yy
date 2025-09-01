@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DanmakuShapes",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DanmakuShapes",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Danmaku/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}

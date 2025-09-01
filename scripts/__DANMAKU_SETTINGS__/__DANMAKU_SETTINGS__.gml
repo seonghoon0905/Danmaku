@@ -1,0 +1,11 @@
+#macro DANMAKU_SCREEN_WIDTH 800
+#macro DANMAKU_SCREEN_HEIGHT 608
+#macro DANMAKU_FOV 90
+#macro DANMAKU_ZNEAR 20
+#macro DANMAKU_ZFAR 800
+#macro DANMAKU_INCOLLIDABLE_BULLET_ALPHA 0.1
+#macro ENABLE_PARTICLE_SYSTEM true
+
+global.danmaku_particle_system = ENABLE_PARTICLE_SYSTEM ? part_system_create() : undefined;
+
+

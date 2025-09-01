@@ -1,0 +1,13 @@
+{
+  "$GMScript":"v1",
+  "%Name":"DanmakuInsideRotation",
+  "isCompatibility":false,
+  "isDnD":false,
+  "name":"DanmakuInsideRotation",
+  "parent":{
+    "name":"Scripts",
+    "path":"folders/Danmaku/Scripts.yy",
+  },
+  "resourceType":"GMScript",
+  "resourceVersion":"2.0",
+}
