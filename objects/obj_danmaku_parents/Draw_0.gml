@@ -17,7 +17,7 @@ if(z > DANMAKU_ZNEAR && z < DANMAKU_ZFAR){
             gpu_set_depth(z);
         }
          
-        draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, c_white, image_alpha * alpha);
+        draw_sprite_ext(sprite_index, image_index, x, y, image_xscale, image_yscale, image_angle, image_blend, image_alpha * alpha);
         
         if(enable_projection){
             gpu_set_ztestenable(false);
