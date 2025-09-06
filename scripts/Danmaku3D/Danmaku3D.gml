@@ -25,8 +25,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
     
     far_dist = -infinity;
     
-    for(var _i = 0; _i < array_length(_insts); _i++){
-        var _inst = _insts[_i];
+    static add_inst = function(_inst){
         _inst.enable_projection = true;
         _inst.enable_collision_over_focal_length = false;
         
@@ -41,35 +40,39 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         far_dist = _dist > far_dist ? _dist : far_dist;
     }
     
-    function enable_projection(_bool){
+    for(var _i = 0; _i < array_length(_insts); _i++){
+        add_inst(_insts[_i]);
+    }
+    
+    static enable_projection = function(_bool){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.enable_projection = _bool;
         }
     }
     
-    function enable_collision_over_focal_length(_bool){
+    static enable_collision_over_focal_length = function(_bool){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.enable_collision_over_focal_length = _bool;
         }
     }
     
-    function set_tag(_tag){
+    static set_tag = function(_tag){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.tag = _tag;
         }
     }
     
-    function set_additive(_additive){
+    static set_additive = function(_additive){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.additive = _additive;
         }
     }
     
-    function set_image_angle_sync(_angle_adjust){
+    static set_image_angle_sync = function(_angle_adjust){
         image_angle_sync = true;
         image_angle_sync_angle_adjust = _angle_adjust;
         
@@ -80,14 +83,14 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }
     }
     
-    function set_image_blend(_color){
+    static set_image_blend = function(_color){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.image_blend = _color;
         }
     }
     
-    function set_image_blend_circular_mapping(_angle = 0, _min_hue = 0, _max_hue= 255, _sat = 255, _val = 255){
+    static set_image_blend_circular_mapping = function(_angle = 0, _min_hue = 0, _max_hue= 255, _sat = 255, _val = 255){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             var _dir = point_direction(x, y, _inst.x, _inst.y) + _angle;
@@ -96,35 +99,35 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }
     }
     
-    function set_image_xscale(_xscale){
+    static set_image_xscale = function(_xscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale = _xscale;
         }
     }
     
-    function add_image_xscale(_dxscale){
+    static add_image_xscale = function(_dxscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale += _dxscale;
         }
     }
     
-    function set_image_yscale(_yscale){
+    static set_image_yscale = function(_yscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.yscale = _yscale;
         }
     }
     
-    function add_image_yscale(_dyscale){
+    static add_image_yscale = function(_dyscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.yscale += _dyscale;
         }
     }
     
-    function set_image_scale(_scale){
+    static set_image_scale = function(_scale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale = _scale;
@@ -132,7 +135,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }
     }
     
-    function add_image_scale(_dscale){
+    static add_image_scale = function(_dscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale += _dscale;
@@ -140,63 +143,144 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }
     }
     
+    static set_image_alpha = function(_alpha){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.alpha = _alpha;
+        }
+    }
     
-    function set_particle(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white){
+    static add_image_alpha = function(_dalpha){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.alpha += _dalpha;
+        }
+    }
+    
+    static set_particle = function(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale, _alpha, _interval, _life, _col);
         }
     }
     
-    function set_position(_x, _y, _z){
+    static set_particle_color2 = function(_color1, _color2){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_color2(_inst, _color1, _color2);
+        }
+    }
+    
+    static set_particle_color3 = function(_color1, _color2, _color3){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_color2(_inst, _color1, _color2, _color3);
+        }
+    }
+    
+    static set_particle_horizontal_gradient = function(_min_x = 0, _max_x = DANMAKU_SCREEN_WIDTH, _min_hue = 0, _max_hue = 255, _sat = 255, _val = 255){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_horizontal_gradient(_inst, _min_x, _max_x, _min_hue, _max_hue, _sat, _val);
+        }
+    }
+    
+    static set_particle_vetrtical_gradient = function(_min_y = 0, _max_y = DANMAKU_SCREEN_HEIGHT, _min_hue = 0, _max_hue = 255, _sat = 255, _val = 255){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_vertical_gradient(_inst, _min_y, _max_y, _min_hue, _max_hue, _sat, _val);
+        }
+    }
+    
+    static set_particle_circular_gradient = function(_x = 400, _y = 304, _min_hue = 0, _max_hue = 255, _sat = 255, _val = 255, _dir_offset = 0){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_circular_gradient(_inst, _x, _y, _min_hue, _max_hue, _sat, _val, _dir_offset);
+        }
+    }
+    
+    static set_particle_sprite = function(_sprite){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_sprite(_inst, _sprite);
+        }
+    }
+    
+    static set_position = function(_x, _y, _z){
 		x = _x;
 		y = _y;
         z = _z;
 	}
 
-	function add_position(_dx, _dy, _dz){
+	static add_position = function(_dx, _dy, _dz){
 		x += _dx;
 		y += _dy;
         z += _dz;
 	}
-
-    function set_scale(_scale){
+    
+    static set_center = function(_x, _y, _z){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i];
+            _inst.x += x - _x; 
+            _inst.y += y - _y;
+            _inst.z += z - _z;
+        }
+        
+        x = _x;
+        y = _y;
+        z = _z;
+    }
+    
+    static add_center = function(_dx, _dy, _dz){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i];
+            _inst.x -= _dx; 
+            _inst.y -= _dy;
+            _inst.z -= _dz;
+        }
+        
+        x += _dx;
+        y += _dy;
+        z += _dz;
+    }
+    
+    static set_scale = function(_scale){
 		xscale = _scale;
 		yscale = _scale;
         zscale = _scale;
 	}
     
-    function add_scale(_dscale){
+    static add_scale = function(_dscale){
 		xscale += _dscale;
 		yscale += _dscale;
         zscale += _dscale;
 	}
     
-    function set_xscale(_xscale){
+    static set_xscale = function(_xscale){
 		xscale = _xscale;
 	}
     
-    function add_xscale(_dxscale){
+    static add_xscale = function(_dxscale){
 		xscale += _dxscale;
 	}
     
-    function set_yscale(_yscale){
+    static set_yscale = function(_yscale){
 		yscale = _yscale;
 	}
     
-    function add_yscale(_dyscale){
+    static add_yscale = function(_dyscale){
 		yscale += _dyscale;
 	}
     
-    function set_zscale(_zscale){
+    static set_zscale = function(_zscale){
 		zscale = _zscale;
 	}
     
-    function add_zscale(_dzscale){
+    static add_zscale = function(_dzscale){
 		zscale += _dzscale;
 	}
 
-    function update_local_axes(){
+    static update_local_axes = function(){
 		var _cy = dcos(yaw);
 		var _sy = dsin(yaw);
 		var _cp = dcos(pitch); 
@@ -217,7 +301,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
 		forward.z = _cy * _cp;
 	}
 	
-	function get_axis_clamped_value(_value){
+	static get_axis_clamped_value = function(_value){
 		_value = _value % 360;
 		if(_value < 0){
 			_value += 360;
@@ -225,31 +309,31 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
 		return _value;
 	}
 	
-    function set_rotation(_yaw, _pitch, _roll){
+    static set_rotation = function(_yaw, _pitch, _roll){
         yaw = get_axis_clamped_value(_yaw);
         pitch = get_axis_clamped_value(_pitch);
 		roll = get_axis_clamped_value(_roll);
 		update_local_axes();
 	}
 	
-	function add_rotation(_dyaw, _dpitch, _droll){
+	static add_rotation = function(_dyaw, _dpitch, _droll){
         yaw = get_axis_clamped_value(yaw + _dyaw);
         pitch = get_axis_clamped_value(pitch + _dpitch);
 		roll = get_axis_clamped_value(roll + _droll);
         update_local_axes();
 	}
     
-    function set_inside_rotation(_inside_rotation){
+    static set_inside_rotation = function(_inside_rotation){
 		inside_rotation = _inside_rotation;
         rotate_inside_danmaku(self, inside_rotation);
 	}
 	
-	function add_inside_rotation(_inside_rotation){
+	static add_inside_rotation = function(_inside_rotation){
 		inside_rotation += _inside_rotation;
         rotate_inside_danmaku(self, inside_rotation);
 	}
     
-    function update_danmaku(_direct_alpha = false){
+    static update_danmaku = function(_direct_alpha = false){
         var _len = array_length(insts);
         
         for(var _i = 0; _i < _len; _i++){
@@ -268,7 +352,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }    
     }
     
-    function explode(_spd, _inherit_particle = false, _tag = "default"){
+    static explode = function(_spd, _inherit_particle = false, _tag = "default"){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             var _dir = point_direction(x, y, _inst.x, _inst.y);
@@ -311,9 +395,21 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }
     }
     
-    function destroy(){
+    static destroy = function(){
         for(var _i = 0; _i < array_length(insts); _i++){
             instance_destroy(insts[_i].id);
+        }
+    }
+    
+    static destroy_fadeout = function(_destroy_time = 30){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            destroy_danmaku_fadeout(_inst[_i].id, _destroy_time);
+        }
+    }
+    
+    static destroy_burst = function(_inst, _fadeout, _size_decrease, _additive, _min_spd = 3, _max_spd = 5, _scale = 1, _alpha = 1, _life = 5, _col = c_white, _sprite = undefined){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            destroy_danmaku_burst(_inst[_i].id, _fadeout, _size_decrease, _additive, _min_spd, _max_spd, _scale, _alpha, _life, _col, _sprite);
         }
     }
 }

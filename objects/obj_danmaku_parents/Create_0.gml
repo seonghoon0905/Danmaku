@@ -10,12 +10,11 @@ enable_collision_over_focal_length = true;
 z = DANMAKU_FOCAL_LENGTH;
 xscale = 1;
 yscale = 1;
+alpha = 1;
 
 direction_speed = 0;
-
 additive = false;
 additive_ext = false;
 outsidekill = false;
-
 particle_emitter = undefined;
-particle_position_noise = false;
+destroy = false;

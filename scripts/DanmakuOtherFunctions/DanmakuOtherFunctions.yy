@@ -5,8 +5,8 @@
   "isDnD":false,
   "name":"DanmakuOtherFunctions",
   "parent":{
-    "name":"Scripts",
-    "path":"folders/Danmaku/Scripts.yy",
+    "name":"SubFunctions",
+    "path":"folders/Danmaku/Scripts/SubFunctions.yy",
   },
   "resourceType":"GMScript",
   "resourceVersion":"2.0",

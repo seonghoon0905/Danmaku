@@ -1,3 +1,18 @@
+function rotate_inside_circle_danmaku(_danmaku, _inside_rotation){
+    var _n = _danmaku.inside_rotation_param.n;
+    var _start_dir = _danmaku.inside_rotation_param.dir_offset;
+	var _end_dir = _danmaku.inside_rotation_param.dir_offset + 360;
+    _start_dir += _inside_rotation;
+    _end_dir += _inside_rotation;
+    
+    for(var _dir = _start_dir; _dir < _end_dir; _dir += 360 / _n){
+		var _xx = lengthdir_x(_danmaku.inside_rotation_param.size, _dir);
+		var _yy = lengthdir_y(_danmaku.inside_rotation_param.size, _dir);
+		_danmaku.insts[_cnt].x = _xx;
+        _danmaku.insts[_cnt].y = _yy;
+	}
+}
+
 function rotate_inside_polygon_danmaku(_danmaku, _inside_rotation){
     var _n = _danmaku.inside_rotation_param.n;
     var _bullets_per_line = _danmaku.inside_rotation_param.bullets_per_line;
@@ -147,6 +162,9 @@ function rotate_inside_danmaku(_danmaku, _inside_rotation){
     }
     
     switch(_danmaku.inside_rotation_param.type){
+        case "circle":
+            rotate_inside_circle_danmaku(_danmaku, _inside_rotation);
+            break;
         case "polygon":
             rotate_inside_polygon_danmaku(_danmaku, _inside_rotation);
             break;

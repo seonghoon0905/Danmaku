@@ -1,6 +1,6 @@
 #region 3D shapes
 
-function make_sphere_danmaku(_x, _y, _circle_amount, _bullets_per_circle, _dir_offset, _size, _layer, _obj){
+function make_sphere_danmaku(_x, _y, _z, _circle_amount, _bullets_per_circle, _size, _layer, _obj){
     if(!object_is_ancestor(_obj, obj_danmaku_parents)){
         return;
     }
@@ -14,24 +14,22 @@ function make_sphere_danmaku(_x, _y, _circle_amount, _bullets_per_circle, _dir_o
         var _radius = dcos(_dir) * _size;
         var _n = (_i == 0 || _i == _circle_amount - 1) ? 1 : _bullets_per_circle;
         for(var _j = 0; _j < _n; _j++){
-            var _xx = lengthdir_x(_radius, lerp(_dir_offset, _dir_offset + 360, _j / _n));
-            var _zz = lengthdir_y(_radius, lerp(_dir_offset, _dir_offset + 360, _j / _n));
+            var _xx = lengthdir_x(_radius, lerp(0, 360, _j / _n));
+            var _zz = lengthdir_y(_radius, lerp(0, 360, _j / _n));
             var _inst = instance_create_layer(_xx + _x, _yy, _layer, _obj);
-            _inst.z = _zz + DANMAKU_FOCAL_LENGTH;
+            _inst.z = _zz + _z;
             array_push(_insts, _inst);
         }
     }
     
-    var _pol = new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts);
-    
-    return _pol;
+    return new Danmaku3D(_x, _y, _z, _insts);
 }
 
 #endregion
 
 #region 2D shapes
 
-function make_circle_danmaku3d(_x, _y, _n, _dir_offset, _size, _layer, _obj){
+function make_circle_danmaku3d(_x, _y, _z, _n, _dir_offset, _size, _layer, _obj){
 	var _insts = [];
 	var _start_dir = _dir_offset;
 	var _end_dir = _dir_offset + 360;
@@ -39,14 +37,19 @@ function make_circle_danmaku3d(_x, _y, _n, _dir_offset, _size, _layer, _obj){
 		var _xx = _x + lengthdir_x(_size, _dir);
 		var _yy = _y + lengthdir_y(_size, _dir);
 		var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-        _inst.z = DANMAKU_FOCAL_LENGTH;
+        _inst.z = _z;
 		array_push(_insts, _inst);
 	}
     
-	return new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts);
+	return new Danmaku3D(_x, _y, _z, _insts, {
+		type : "circle",
+		n : _n,
+		dir_offset : _dir_offset,
+        size : _size
+	});
 }
 
-function make_polygon_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _size, _layer, _obj){
+function make_polygon_danmaku3d(_x, _y, _z, _n, _bullets_per_line, _dir_offset, _size, _layer, _obj){
 	var _insts = [];
 	var _start_dir = _dir_offset;
 	var _end_dir = _dir_offset + 360;
@@ -59,12 +62,12 @@ function make_polygon_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _siz
 			var _xx = lerp(_start_x, _end_x, _i / _bullets_per_line);
 			var _yy = lerp(_start_y, _end_y, _i / _bullets_per_line);
 			var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-            _inst.z = DANMAKU_FOCAL_LENGTH;
+            _inst.z = _z;
 			array_push(_insts, _inst);
 		}
 	}
     
-	return new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts, {
+	return new Danmaku3D(_x, _y, _z, _insts, {
 		type : "polygon",
 		n : _n,
 		bullets_per_line : _bullets_per_line,
@@ -73,7 +76,7 @@ function make_polygon_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _siz
 	});
 }
 
-function make_star_danmaku3d(_x, _y, _bullets_per_line, _dir_offset, _size, _layer, _obj){
+function make_star_danmaku3d(_x, _y, _z, _bullets_per_line, _dir_offset, _size, _layer, _obj){
 	var _insts = [];
 	var _start_dir = _dir_offset;
 	var _end_dir = _dir_offset + 720;
@@ -86,12 +89,12 @@ function make_star_danmaku3d(_x, _y, _bullets_per_line, _dir_offset, _size, _lay
 			var _xx = lerp(_start_x, _end_x, _i / _bullets_per_line);
 			var _yy = lerp(_start_y, _end_y, _i / _bullets_per_line);
 			var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-            _inst.z = DANMAKU_FOCAL_LENGTH;
+            _inst.z = _z;
 			array_push(_insts, _inst);
 		}
 	}
     
-	return new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts, {
+	return new Danmaku3D(_x, _y, _z, _insts, {
 		type : "star",
 		bullets_per_line : _bullets_per_line,
 		dir_offset : _dir_offset,
@@ -99,7 +102,7 @@ function make_star_danmaku3d(_x, _y, _bullets_per_line, _dir_offset, _size, _lay
 	});
 }
 
-function make_heart_danmaku3d(_x, _y, _n, _dir_offset, _size, _layer, _obj){
+function make_heart_danmaku3d(_x, _y, _z, _n, _dir_offset, _size, _layer, _obj){
 	var _insts = [];
 	var _start_dir = _dir_offset;
 	var _end_dir = _dir_offset + 360;
@@ -111,11 +114,11 @@ function make_heart_danmaku3d(_x, _y, _n, _dir_offset, _size, _layer, _obj){
 		_xx += _x;
 		_yy += _y;
 		var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-        _inst.z = DANMAKU_FOCAL_LENGTH;
+        _inst.z = _z;
 		array_push(_insts, _inst);
 	}
     
-	return new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts, {
+	return new Danmaku3D(_x, _y, _z, _insts, {
 		type : "heart",
 		n : _n,
 		dir_offset : _dir_offset,
@@ -123,7 +126,7 @@ function make_heart_danmaku3d(_x, _y, _n, _dir_offset, _size, _layer, _obj){
 	});
 }
 
-function make_flower_danmaku3d(_x, _y, _n, _bullets_per_leaf, _dir_offset, _size, _layer, _obj){
+function make_flower_danmaku3d(_x, _y, _z, _n, _bullets_per_leaf, _dir_offset, _size, _layer, _obj){
     var _insts = [];
     var _channel = animcurve_get_channel(ac_danmaku_flower, 0);
     for(var _i = 0; _i < _n; _i++){
@@ -136,12 +139,12 @@ function make_flower_danmaku3d(_x, _y, _n, _bullets_per_leaf, _dir_offset, _size
             var _xx = _x + lengthdir_x(_size + _len, _dir);
             var _yy = _y + lengthdir_y(_size + _len, _dir);
             var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-            _inst.z = DANMAKU_FOCAL_LENGTH;
+            _inst.z = _z;
     		array_push(_insts, _inst);
         }
     }
     
-    return new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts, {
+    return new Danmaku3D(_x, _y, _z, _insts, {
         type : "flower",  
         n : _n,
         bullets_per_leaf : _bullets_per_leaf,
@@ -150,7 +153,7 @@ function make_flower_danmaku3d(_x, _y, _n, _bullets_per_leaf, _dir_offset, _size
     });
 }
 
-function make_shuriken_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _size, _layer, _obj){
+function make_shuriken_danmaku3d(_x, _y, _z, _n, _bullets_per_line, _dir_offset, _size, _layer, _obj){
     var _insts = [];
     for(var _i = 0; _i < _n; _i++){
         var _start_dir = lerp(_dir_offset, _dir_offset + 360, _i / _n);
@@ -164,7 +167,7 @@ function make_shuriken_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _si
             var _xx = lerp(_start_x, _end_x, _j / (_bullets_per_line - 1));
             var _yy = lerp(_start_y, _end_y, _j / (_bullets_per_line - 1));
             var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-            _inst.z = DANMAKU_FOCAL_LENGTH;
+            _inst.z = _z;
             array_push(_insts, _inst);
         }
         
@@ -179,12 +182,12 @@ function make_shuriken_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _si
             var _xx = lerp(_start_x, _end_x, _j / (_bullets_per_line - 1));
             var _yy = lerp(_start_y, _end_y, _j / (_bullets_per_line - 1));
             var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-            _inst.z = DANMAKU_FOCAL_LENGTH;
+            _inst.z = _z;
             array_push(_insts, _inst);
         }
     }
     
-    return new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts, {
+    return new Danmaku3D(_x, _y, _z, _insts, {
         type : "shuriken",  
         n : _n,
         bullets_per_line : _bullets_per_line,
@@ -193,7 +196,7 @@ function make_shuriken_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _si
     });
 }
 
-function make_lines_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _size, _layer, _obj){
+function make_lines_danmaku3d(_x, _y, _z, _n, _bullets_per_line, _dir_offset, _size, _layer, _obj){
     var _insts = [];
     for(var _i = 0; _i < _n; _i++){
         var _dir = lerp(_dir_offset, _dir_offset + 360, _i / _n);
@@ -205,12 +208,12 @@ function make_lines_danmaku3d(_x, _y, _n, _bullets_per_line, _dir_offset, _size,
             var _xx = _x + lengthdir_x(_len, _dir);
             var _yy = _y + lengthdir_y(_len, _dir);
             var _inst = instance_create_layer(_xx, _yy, _layer, _obj);
-            _inst.z = DANMAKU_FOCAL_LENGTH;
+            _inst.z = _z;
             array_push(_insts, _inst);
         }
     }
     
-    return new Danmaku3D(_x, _y, DANMAKU_FOCAL_LENGTH, _insts);
+    return new Danmaku3D(_x, _y, _z, _insts);
 }
 
 #endregion

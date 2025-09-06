@@ -1,9 +1,9 @@
 {
   "$GMScript":"v1",
-  "%Name":"DanmakuInsideRotation",
+  "%Name":"DanmakuGetBulletsLIst",
   "isCompatibility":false,
   "isDnD":false,
-  "name":"DanmakuInsideRotation",
+  "name":"DanmakuGetBulletsLIst",
   "parent":{
     "name":"SubFunctions",
     "path":"folders/Danmaku/Scripts/SubFunctions.yy",

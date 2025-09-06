@@ -12,7 +12,8 @@ function make_circle_danmaku(_x, _y, _n, _dir_offset, _size, _layer, _obj){
 	return new Danmaku(_x, _y, _insts, {
 		type : "circle",
 		n : _n,
-		dir_offset : _dir_offset
+		dir_offset : _dir_offset,
+        size : _size
 	});
 }
 

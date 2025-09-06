@@ -21,9 +21,7 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
     
     far_dist = -infinity;
     
-    for(var _i = 0; _i < array_length(_insts); _i++){
-        var _inst = _insts[_i];
-        
+    static add_inst = function(_inst){
         array_push(insts, {
             id : _inst.id,
             x : _inst.x - x, 
@@ -34,21 +32,25 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         far_dist = _dist > far_dist ? _dist : far_dist;
     }
     
-    function set_tag(_tag){
+    for(var _i = 0; _i < array_length(_insts); _i++){
+        add_inst(_insts[_i]);
+    }
+    
+    static set_tag = function(_tag){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.tag = _tag;
         }
     }
     
-    function set_additive(_additive){
+    static set_additive = function(_additive){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.additive = _additive;
         }
     }
     
-    function set_image_angle_sync(_angle_adjust){
+    static set_image_angle_sync = function(_angle_adjust){
         image_angle_sync = true;
         image_angle_sync_angle_adjust = _angle_adjust;
         
@@ -59,14 +61,14 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
-    function set_image_blend(_color){
+    static set_image_blend = function(_color){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.image_blend = _color;
         }
     }
     
-    function set_image_blend_circular_mapping(_angle = 0, _min_hue = 0, _max_hue= 255, _sat = 255, _val = 255){
+    static set_image_blend_circular_mapping = function(_angle = 0, _min_hue = 0, _max_hue= 255, _sat = 255, _val = 255){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             var _dir = point_direction(x, y, _inst.x, _inst.y) + _angle;
@@ -75,35 +77,35 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
-    function set_image_xscale(_xscale){
+    static set_image_xscale = function(_xscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale = _xscale;
         }
     }
     
-    function add_image_xscale(_dxscale){
+    static add_image_xscale = function(_dxscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale += _dxscale;
         }
     }
     
-    function set_image_yscale(_yscale){
+    static set_image_yscale = function(_yscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.yscale = _yscale;
         }
     }
     
-    function add_image_yscale(_dyscale){
+    static add_image_yscale = function(_dyscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.yscale += _dyscale;
         }
     }
     
-    function set_image_scale(_scale){
+    static set_image_scale = function(_scale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale = _scale;
@@ -111,7 +113,7 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
-    function add_image_scale(_dscale){
+    static add_image_scale = function(_dscale){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             _inst.xscale += _dscale;
@@ -119,50 +121,128 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
-    function set_particle(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white){
+    static set_image_alpha = function(_alpha){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.alpha = _alpha;
+        }
+    }
+    
+    static add_image_alpha = function(_dalpha){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.alpha += _dalpha;
+        }
+    }
+    
+    static set_particle = function(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale, _alpha, _interval, _life, _col);
         }
     }
+    
+    static set_particle_color2 = function(_color1, _color2){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_color2(_inst, _color1, _color2);
+        }
+    }
+    
+    static set_particle_color3 = function(_color1, _color2, _color3){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_color2(_inst, _color1, _color2, _color3);
+        }
+    }
+    
+    static set_particle_horizontal_gradient = function(_min_x = 0, _max_x = DANMAKU_SCREEN_WIDTH, _min_hue = 0, _max_hue = 255, _sat = 255, _val = 255){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_horizontal_gradient(_inst, _min_x, _max_x, _min_hue, _max_hue, _sat, _val);
+        }
+    }
+    
+    static set_particle_vetrtical_gradient = function(_min_y = 0, _max_y = DANMAKU_SCREEN_HEIGHT, _min_hue = 0, _max_hue = 255, _sat = 255, _val = 255){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_vertical_gradient(_inst, _min_y, _max_y, _min_hue, _max_hue, _sat, _val);
+        }
+    }
+    
+    static set_particle_circular_gradient = function(_x = 400, _y = 304, _min_hue = 0, _max_hue = 255, _sat = 255, _val = 255, _dir_offset = 0){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_circular_gradient(_inst, _x, _y, _min_hue, _max_hue, _sat, _val, _dir_offset);
+        }
+    }
+    
+    static set_particle_sprite = function(_sprite){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            set_danmaku_particle_sprite(_inst, _sprite);
+        }
+    }
 	
-	function set_position(_x, _y){
+	static set_position = function(_x, _y){
 		x = _x;
 		y = _y;
 	}
 
-	function add_position(_dx, _dy){
+	static add_position = function(_dx, _dy){
 		x += _dx;
 		y += _dy;
 	}
+    
+    static set_center = function(_x, _y){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i];
+            _inst.x += x - _x; 
+            _inst.y += y - _y;
+        }
+        
+        x = _x;
+        y = _y;
+    }
+    
+    static add_center = function(_dx, _dy){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i];
+            _inst.x -= _dx; 
+            _inst.y -= _dy;
+        }
+        
+        x += _dx;
+        y += _dy;
+    }
 
-    function set_scale(_scale){
+    static set_scale = function(_scale){
 		xscale = _scale;
 		yscale = _scale;
 	}
     
-    function add_scale(_dscale){
+    static add_scale = function(_dscale){
 		xscale += _dscale;
 		yscale += _dscale;
 	}
     
-    function set_xscale(_xscale){
+    static set_xscale = function(_xscale){
 		xscale = _xscale;
 	}
     
-    function add_xscale(_dxscale){
+    static add_xscale = function(_dxscale){
 		xscale += _dxscale;
 	}
     
-    function set_yscale(_yscale){
+    static set_yscale = function(_yscale){
 		yscale = _yscale;
 	}
     
-    function add_yscale(_dyscale){
+    static add_yscale = function(_dyscale){
 		yscale += _dyscale;
 	}
 	
-    function update_local_axes(){
+    static update_local_axes = function(){
 		var _cr = dcos(roll); 
 		var _sr = dsin(roll); 
 		
@@ -173,7 +253,7 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
 		up.y = _cr;
 	}
 	
-	function get_axis_clamped_value(_value){
+    static get_axis_clamped_value = function(_value){
 		_value = _value % 360;
 		if(_value < 0){
 			_value += 360;
@@ -181,27 +261,27 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
 		return _value;
 	}
 	
-	function set_rotation(_roll){
+	static set_rotation = function(_roll){
 		roll = get_axis_clamped_value(_roll);
 		update_local_axes();
 	}
 	
-	function add_rotation(_droll){
+    static add_rotation = function(_droll){
 		roll = get_axis_clamped_value(roll + _droll);
 		update_local_axes();
 	}
     
-    function set_inside_rotation(_inside_rotation){
+    static set_inside_rotation = function(_inside_rotation){
 		inside_rotation = _inside_rotation;
         rotate_inside_danmaku(self, inside_rotation);
 	}
 	
-	function add_inside_rotation(_inside_rotation){
+	static add_inside_rotation = function(_inside_rotation){
 		inside_rotation += _inside_rotation;
         rotate_inside_danmaku(self, inside_rotation);
 	}
     
-    function update_danmaku(){
+    static update_danmaku = function(){
         var _len = array_length(insts);
         for(var _i = 0; _i < _len; _i++){
             var _inst = insts[_i];
@@ -217,7 +297,7 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }    
     }
     
-    function explode(_spd, _inherit_particle = false, _tag = "default"){
+    static explode = function(_spd, _inherit_particle = false, _tag = "default"){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
             var _dir = point_direction(x, y, _inst.x, _inst.y);
@@ -260,9 +340,21 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
-    function destroy(){
+    static destroy = function(){
         for(var _i = 0; _i < array_length(insts); _i++){
             instance_destroy(insts[_i].id);
+        }
+    }
+    
+    static destroy_fadeout = function(_destroy_time = 30){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            destroy_danmaku_fadeout(_inst[_i].id, _destroy_time);
+        }
+    }
+    
+    static destroy_burst = function(_inst, _fadeout, _size_decrease, _additive, _min_spd = 3, _max_spd = 5, _scale = 1, _alpha = 1, _life = 5, _col = c_white, _sprite = undefined){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            destroy_danmaku_burst(_inst[_i].id, _fadeout, _size_decrease, _additive, _min_spd, _max_spd, _scale, _alpha, _life, _col, _sprite);
         }
     }
 }
