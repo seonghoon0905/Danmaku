@@ -25,6 +25,196 @@ function make_sphere_danmaku(_x, _y, _z, _circle_amount, _bullets_per_circle, _s
     return new Danmaku3D(_x, _y, _z, _insts);
 }
 
+function make_finonacchi_sphere_danmaku(_x, _y, _z, _n, _size, _layer, _obj){
+    if(_n < 2 || !object_is_ancestor(_obj, obj_danmaku_parents)){
+        return;
+    }
+    
+    var _insts = [];
+    var _phi = pi * (sqrt(5) - 1);
+    for(var _i = 0; _i < _n; _i++){
+        var _yy = 1 - (_i / (_n - 1)) * 2;
+        var _radius = sqrt(1 - _yy * _yy) * _size;
+        var _dir = _phi * _i;
+        var _xx = cos(_dir) * _radius;
+        var _zz = sin(_dir) * _radius;
+        var _inst = instance_create_layer(_x + _xx, _y + _yy * _size, _layer, _obj);
+        _inst.z = _z + _zz;
+        array_push(_insts, _inst);
+    }
+    
+    return new Danmaku3D(_x, _y, _z, _insts);
+}
+
+function make_tetrahedron_danmaku(_x, _y, _z, _bullets_per_line, _size, _layer, _obj){
+    if(!object_is_ancestor(_obj, obj_danmaku_parents)){
+        return;
+    }
+    
+    var _insts = [];
+    var _sub_size = _size * dsin(30);
+    
+    for(var _i = 0; _i < 3; _i++){
+        var _start_dir = _i * 120;
+        var _end_dir = _i * 120 + 120;
+        var _start_x = lengthdir_x(_size, _start_dir);
+        var _start_z = lengthdir_y(_size, _start_dir);
+        var _end_x = lengthdir_x(_size, _end_dir);
+        var _end_z = lengthdir_y(_size, _end_dir);
+        
+        for(var _j = 0; _j < _bullets_per_line; _j++){
+            var _xx = lerp(_start_x, _end_x, _j / (_bullets_per_line - 1));
+            var _zz = lerp(_start_z, _end_z, _j / (_bullets_per_line - 1));
+            var _inst = instance_create_layer(_xx + _x, _sub_size + _y, _layer, _obj);
+            _inst.z = _zz + _z;
+            array_push(_insts, _inst);
+        }
+        
+        for(var _j = 0; _j < _bullets_per_line; _j++){
+            var _xx = lerp(_start_x, 0, _j / (_bullets_per_line - 1));
+            var _yy = lerp(_sub_size, -_size, _j / (_bullets_per_line - 1));
+            var _zz = lerp(_start_z, 0, _j / (_bullets_per_line - 1));
+            var _inst = instance_create_layer(_xx + _x, _yy + _y, _layer, _obj);
+            _inst.z = _zz + _z;
+            array_push(_insts, _inst);
+        }
+    }
+    
+    return new Danmaku3D(_x, _y, _z, _insts);
+}
+
+function make_cuboid_danmaku(_x, _y, _z, _width_num, _height_num, _depth_num, _dist_per_bullets, _layer, _obj){
+    if(!object_is_ancestor(_obj, obj_danmaku_parents)){
+        return;
+    }
+    
+    var _insts = [];
+    var _width = _width_num * _dist_per_bullets;
+    var _height = _height_num * _dist_per_bullets;
+    var _depth = _depth_num * _dist_per_bullets;
+    
+    for(var _i = 0; _i < 2; _i++){
+        var _zz = _depth / 2;
+        _zz = _i < 1 ? _zz : -_zz;
+        for(var _j = 0; _j < 2; _j++){
+            var _yy = _height / 2;
+            _yy = _j < 1 ? _yy : -_yy;
+            for(var _k = 0; _k < _width_num; _k++){
+                var _xx = lerp(-_width / 2, _width / 2, _k / (_width_num - 1));
+                var _inst = instance_create_layer(_xx + _x, _yy + _y, _layer, _obj);
+                _inst.z = _zz + _z;
+                array_push(_insts, _inst);
+            }
+        }
+    }
+    
+    for(var _i = 0; _i < 2; _i++){
+        var _zz = _depth / 2;
+        _zz = _i < 1 ? _zz : -_zz;
+        for(var _j = 0; _j < 2; _j++){
+            var _xx = _width / 2;
+            _xx = _j < 1 ? _xx : -_xx;
+            for(var _k = 1; _k < _height_num - 1; _k++){
+                var _yy = lerp(-_height / 2, _height / 2, _k / (_height_num - 1));
+                var _inst = instance_create_layer(_xx + _x, _yy + _y, _layer, _obj);
+                _inst.z = _zz + _z;
+                array_push(_insts, _inst);
+            }
+        }
+    }
+    
+    for(var _i = 0; _i < 2; _i++){
+        var _xx = _width / 2;
+        _xx = _i < 1 ? _xx : -_xx;
+        for(var _j = 0; _j < 2; _j++){
+            var _yy = _height / 2;
+            _yy = _j < 1 ? _yy : -_yy;
+            for(var _k = 1; _k < _depth_num - 1; _k++){
+                var _zz = lerp(-_depth / 2, _depth / 2, _k / (_depth_num - 1));
+                var _inst = instance_create_layer(_xx + _x, _yy + _y, _layer, _obj);
+                _inst.z = _zz + _z;
+                array_push(_insts, _inst);
+            }
+        }
+    }
+    
+    return new Danmaku3D(_x, _y, _z, _insts);
+}
+
+function make_full_cuboid_danmaku(_x, _y, _z, _width_num, _height_num, _depth_num, _dist_per_bullets, _layer, _obj){
+    if(!object_is_ancestor(_obj, obj_danmaku_parents)){
+        return;
+    }
+    
+    var _insts = [];
+    var _width = _width_num * _dist_per_bullets;
+    var _height = _height_num * _dist_per_bullets;
+    var _depth = _depth_num * _dist_per_bullets;
+    
+    for(var _i = 0; _i < 2; _i++){
+        var _zz = _depth / 2;
+        _zz = _i < 1 ? _zz : -_zz;
+        for(var _j = 0; _j < _height_num; _j++){
+            var _yy = lerp(-_height / 2, _height / 2, _j / (_height_num - 1));
+            for(var _k = 0; _k < _width_num; _k++){
+                var _xx = lerp(-_width / 2, _width / 2, _k / (_width_num - 1));
+                var _inst = instance_create_layer(_xx + _x, _yy + _y, _layer, _obj);
+                _inst.z = _zz + _z;
+                array_push(_insts, _inst);
+            }
+        }
+    }
+    
+    for(var _i = 0; _i < 2; _i++){
+        var _yy = _height / 2;
+        _yy = _i < 1 ? _yy : -_yy;
+        for(var _j = 1; _j < _depth_num - 1; _j++){
+            var _zz = lerp(-_depth / 2, _depth / 2, _j / (_depth_num - 1));
+            for(var _k = 1; _k < _width_num - 1; _k++){
+                var _xx = lerp(-_width / 2, _width / 2, _k / (_width_num - 1));
+                var _inst = instance_create_layer(_xx + _x, _yy + _y, _layer, _obj);
+                _inst.z = _zz + _z;
+                array_push(_insts, _inst);
+            }
+        }
+    }
+    
+    for(var _i = 0; _i < 2; _i++){
+        var _xx = _width / 2;
+        _xx = _i < 1 ? _xx : -_xx;
+        for(var _j = 0; _j < _height_num; _j++){
+            var _yy = lerp(-_height / 2, _height / 2, _j / (_height_num - 1));
+            for(var _k = 1; _k < _depth_num - 1; _k++){
+                var _zz = lerp(-_depth / 2, _depth / 2, _k / (_depth_num - 1));
+                var _inst = instance_create_layer(_xx + _x, _yy + _y, _layer, _obj);
+                _inst.z = _zz + _z;
+                array_push(_insts, _inst);
+            }
+        }
+    }
+    
+    return new Danmaku3D(_x, _y, _z, _insts);
+}
+
+function make_cube_danmaku(_x, _y, _z, _bullets_per_line, _size, _layer, _obj){
+    if(_bullets_per_line < 2){
+        return;
+    }
+    
+    var _dist_per_bullets = _size / (_bullets_per_line - 1);
+    return make_cuboid_danmaku(_x, _y, _z, _bullets_per_line, _bullets_per_line, _bullets_per_line, _dist_per_bullets, _layer, _obj);
+}
+
+function make_full_cube_danmaku(_x, _y, _z, _bullets_per_line, _size, _layer, _obj){
+    if(_bullets_per_line < 2){
+        return;
+    }
+    
+    var _dist_per_bullets = _size / (_bullets_per_line - 1);
+    return make_full_cuboid_danmaku(_x, _y, _z, _bullets_per_line, _bullets_per_line, _bullets_per_line, _dist_per_bullets, _layer, _obj);
+}
+
+
 #endregion
 
 #region 2D shapes

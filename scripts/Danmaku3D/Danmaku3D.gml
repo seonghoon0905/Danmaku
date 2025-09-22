@@ -157,6 +157,13 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         }
     }
     
+    static set_collision = function(_collision){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.collision = _collision;
+        }
+    }
+    
     static set_particle = function(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white, _sprite = undefined){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
@@ -333,7 +340,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
         rotate_inside_danmaku(self, inside_rotation);
 	}
     
-    static update_danmaku = function(_direct_alpha = false){
+    static update_danmaku = function(){
         var _len = array_length(insts);
         
         for(var _i = 0; _i < _len; _i++){
@@ -341,7 +348,7 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
             
             _inst.id.x = _inst.x * right.x * xscale + _inst.y * up.x * yscale + _inst.z * forward.x * zscale + x;
             _inst.id.y = _inst.x * right.y * xscale + _inst.y * up.y * yscale + _inst.z * forward.y * zscale + y;
-            _inst.id.z = _inst.x * right.z * xscale  + _inst.y * up.z * yscale + _inst.z * forward.z * zscale + z;
+            _inst.id.z = _inst.x * right.z * xscale + _inst.y * up.z * yscale + _inst.z * forward.z * zscale + z;
             
             _inst = _inst.id;
             
@@ -385,7 +392,8 @@ function Danmaku3D(_x, _y, _z, _insts, _inside_rotation_param = undefined) const
                     var _it = _inst.particle_interval;
                     var _l = _inst.particle_life;
                     var _col = _inst.particle_color;
-                    set_danmaku_particle(_sub_inst, _sy, _f, _sd, _pn, _a, _s, _ap, _it, _l, _col);
+                    var _spr = _inst.particle_sprite;
+                    set_danmaku_particle(_sub_inst, _sy, _f, _sd, _pn, _a, _s, _ap, _it, _l, _col, _spr);
                 }
             }
             

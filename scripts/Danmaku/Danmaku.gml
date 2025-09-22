@@ -135,6 +135,13 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
         }
     }
     
+    static set_collision = function(_collision){
+        for(var _i = 0; _i < array_length(insts); _i++){
+            var _inst = insts[_i].id;
+            _inst.collision = _collision;
+        }
+    }
+    
     static set_particle = function(_dynamic_update, _fadeout, _size_decrease, _position_noise, _additive, _scale = 1, _alpha = 1, _interval = 5, _life = 25, _col = c_white, _sprite = undefined){
         for(var _i = 0; _i < array_length(insts); _i++){
             var _inst = insts[_i].id;
@@ -183,7 +190,7 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
             set_danmaku_particle_sprite(_inst, _sprite);
         }
     }
-	
+    
 	static set_position = function(_x, _y){
 		x = _x;
 		y = _y;
@@ -330,7 +337,8 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
                     var _it = _inst.particle_interval;
                     var _l = _inst.particle_life;
                     var _col = _inst.particle_color;
-                    set_danmaku_particle(_sub_inst, _sy, _f, _sd, _pn, _a, _s, _ap, _it, _l, _col);
+                    var _spr = _inst.particle_sprite;
+                    set_danmaku_particle(_sub_inst, _sy, _f, _sd, _pn, _a, _s, _ap, _it, _l, _col, _spr);
                 }
             }
             

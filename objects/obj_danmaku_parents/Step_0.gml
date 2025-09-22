@@ -1,3 +1,7 @@
+if(zspeed != 0){
+    z += zspeed;
+}
+
 if(direction_speed != 0){
     direction += direction_speed;
 }
@@ -69,6 +73,10 @@ if(!enable_collision_over_focal_length){
 
     var _alpha = z > DANMAKU_FOCAL_LENGTH + _epsilon ? DANMAKU_INCOLLIDABLE_BULLET_ALPHA : 1;
     image_alpha += (_alpha - image_alpha) / 10;
+}
+
+if(!collision){
+    mask_index = spr_danmaku_noone;
 }
 
 if(destroy){

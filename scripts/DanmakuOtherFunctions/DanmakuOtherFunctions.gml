@@ -1,3 +1,9 @@
+function set_danmaku_collision(_inst, _collision){
+    with(_inst){
+        _inst.collision = _collision;
+    }
+}
+
 function destroy_danmaku_fadeout(_inst, _destroy_time = 30){
     if(!object_is_ancestor(_inst.object_index, obj_danmaku_parents)){
         return;
