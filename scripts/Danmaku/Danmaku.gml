@@ -269,12 +269,12 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
 	}
 	
 	static set_rotation = function(_roll){
-		roll = get_axis_clamped_value(_roll);
+		roll = get_axis_clamped_value(-_roll);
 		update_local_axes();
 	}
 	
     static add_rotation = function(_droll){
-		roll = get_axis_clamped_value(roll + _droll);
+		roll = get_axis_clamped_value(roll - _droll);
 		update_local_axes();
 	}
     
@@ -356,13 +356,13 @@ function Danmaku(_x, _y, _insts, _inside_rotation_param = undefined) constructor
     
     static destroy_fadeout = function(_destroy_time = 30){
         for(var _i = 0; _i < array_length(insts); _i++){
-            destroy_danmaku_fadeout(_inst[_i].id, _destroy_time);
+            destroy_danmaku_fadeout(insts[_i].id, _destroy_time);
         }
     }
     
     static destroy_burst = function(_inst, _fadeout, _size_decrease, _additive, _min_spd = 3, _max_spd = 5, _scale = 1, _alpha = 1, _life = 5, _col = c_white, _sprite = undefined){
         for(var _i = 0; _i < array_length(insts); _i++){
-            destroy_danmaku_burst(_inst[_i].id, _fadeout, _size_decrease, _additive, _min_spd, _max_spd, _scale, _alpha, _life, _col, _sprite);
+            destroy_danmaku_burst(insts[_i].id, _fadeout, _size_decrease, _additive, _min_spd, _max_spd, _scale, _alpha, _life, _col, _sprite);
         }
     }
 }
