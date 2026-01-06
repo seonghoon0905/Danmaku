@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"v1",
+  "$GMSprite":"v2",
   "%Name":"spr_danmaku_cyan_bullet_4",
   "bboxMode":0,
   "bbox_bottom":9,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"3a62b866-a1a2-4ea9-8d5f-c46f442dbe85","name":"3a62b866-a1a2-4ea9-8d5f-c46f442dbe85","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"3a62b866-a1a2-4ea9-8d5f-c46f442dbe85","name":"3a62b866-a1a2-4ea9-8d5f-c46f442dbe85","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

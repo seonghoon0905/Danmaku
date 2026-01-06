@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"v1",
+  "$GMSprite":"v2",
   "%Name":"spr_danmaku_chartreuse_bullet_2",
   "bboxMode":0,
   "bbox_bottom":15,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"680aa1f4-6d3b-4c05-bbb4-24c168c7a917","name":"680aa1f4-6d3b-4c05-bbb4-24c168c7a917","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"680aa1f4-6d3b-4c05-bbb4-24c168c7a917","name":"680aa1f4-6d3b-4c05-bbb4-24c168c7a917","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

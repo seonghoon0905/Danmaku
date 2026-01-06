@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"v1",
+  "$GMSprite":"v2",
   "%Name":"spr_danmaku_violet_bullet_3",
   "bboxMode":0,
   "bbox_bottom":9,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"863412ee-0a48-47ce-b9d5-aeb5f0b64f65","name":"863412ee-0a48-47ce-b9d5-aeb5f0b64f65","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"863412ee-0a48-47ce-b9d5-aeb5f0b64f65","name":"863412ee-0a48-47ce-b9d5-aeb5f0b64f65","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

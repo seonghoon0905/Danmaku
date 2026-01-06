@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"v1",
+  "$GMSprite":"v2",
   "%Name":"spr_danmaku_chartreuse_cherry",
   "bboxMode":0,
   "bbox_bottom":23,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"2428d51e-b821-4ef9-81eb-e56a8ff8a773","name":"2428d51e-b821-4ef9-81eb-e56a8ff8a773","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"2428d51e-b821-4ef9-81eb-e56a8ff8a773","name":"2428d51e-b821-4ef9-81eb-e56a8ff8a773","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

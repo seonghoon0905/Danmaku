@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"v1",
+  "$GMSprite":"v2",
   "%Name":"spr_danmaku_pink_bullet_11",
   "bboxMode":0,
   "bbox_bottom":15,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"d00a69b5-e0e1-49f1-8d01-c7c09063e76a","name":"d00a69b5-e0e1-49f1-8d01-c7c09063e76a","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"d00a69b5-e0e1-49f1-8d01-c7c09063e76a","name":"d00a69b5-e0e1-49f1-8d01-c7c09063e76a","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

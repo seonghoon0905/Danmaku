@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"v1",
+  "$GMSprite":"v2",
   "%Name":"spr_danmaku_emerald_bullet_11",
   "bboxMode":0,
   "bbox_bottom":15,
@@ -12,7 +12,7 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"8401f1c6-cf3f-44d5-8dd2-b6bb48ed3f31","name":"8401f1c6-cf3f-44d5-8dd2-b6bb48ed3f31","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"8401f1c6-cf3f-44d5-8dd2-b6bb48ed3f31","name":"8401f1c6-cf3f-44d5-8dd2-b6bb48ed3f31","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,

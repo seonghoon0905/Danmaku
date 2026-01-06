@@ -50,6 +50,7 @@ function set_danmaku_particle(_inst, _dynamic_update, _fadeout, _size_decrease, 
         particle_interval = _interval;
         particle_life = _life;   
         particle_color = _col;
+        particle_color_type = 0;
         particle_sprite = _sprite;
     }
 }

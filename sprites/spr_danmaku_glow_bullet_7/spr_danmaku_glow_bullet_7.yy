@@ -1,5 +1,5 @@
 {
-  "$GMSprite":"v1",
+  "$GMSprite":"v2",
   "%Name":"spr_danmaku_glow_bullet_7",
   "bboxMode":0,
   "bbox_bottom":13,
@@ -12,8 +12,8 @@
   "edgeFiltering":false,
   "For3D":false,
   "frames":[
-    {"$GMSpriteFrame":"","%Name":"6cede2ef-81d0-4da0-8e34-cfbe3e4eb665","name":"6cede2ef-81d0-4da0-8e34-cfbe3e4eb665","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
-    {"$GMSpriteFrame":"","%Name":"e225443b-ae0d-4b20-af34-01c2990ff1a2","name":"e225443b-ae0d-4b20-af34-01c2990ff1a2","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"6cede2ef-81d0-4da0-8e34-cfbe3e4eb665","name":"6cede2ef-81d0-4da0-8e34-cfbe3e4eb665","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
+    {"$GMSpriteFrame":"v1","%Name":"e225443b-ae0d-4b20-af34-01c2990ff1a2","name":"e225443b-ae0d-4b20-af34-01c2990ff1a2","resourceType":"GMSpriteFrame","resourceVersion":"2.0",},
   ],
   "gridX":0,
   "gridY":0,
