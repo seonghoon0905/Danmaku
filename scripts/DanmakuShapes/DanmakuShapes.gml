@@ -174,5 +174,5 @@ function make_lines_danmaku(_x, _y, _n, _bullets_per_line, _dir_offset, _size, _
         }
     }
     
-    return new Danmaku(_x, _y, 0, _insts, true);
+    return new Danmaku(_x, _y, _insts, true);
 }

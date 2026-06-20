@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Avoidance Count Stepper</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- React & ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <!-- WaveSurfer.js -->
+    <script src="https://unpkg.com/wavesurfer.js@7/dist/wavesurfer.min.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/timeline.min.js"></script>
+    <script src="https://unpkg.com/wavesurfer.js@7/dist/plugins/zoom.min.js"></script>
+
+    <style>
+        body { background-color: #111827; color: #f3f4f6; }
+        input[type=range] { accent-color: #22c55e; }
+        
+        /* 스크롤바 커스텀 */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #1f2937; }
+        ::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #6b7280; }
+        
+        /* 드래그 앤 드롭 스타일 */
+        .draggable-item { cursor: grab; }
+        .draggable-item:active { cursor: grabbing; }
+        .drag-over { border-top: 2px solid #22c55e; }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect, useRef, useCallback } = React;
+
+        // --- 아이콘 컴포넌트 ---
+        const PlayIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}><path d="M5.25 5.25a.75.75 0 0 1 1.22-.56l13.5 8.25a.75.75 0 0 1 0 1.12l-13.5 8.25a.75.75 0 0 1-1.22-.56V5.25Z" /></svg>
+        );
+        const PauseIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="currentColor" stroke="none" {...props}><path fillRule="evenodd" d="M6.75 5.25a.75.75 0 01.75-.75H9a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H7.5a.75.75 0 01-.75-.75V5.25zm7.5 0A.75.75 0 0115 4.5h1.5a.75.75 0 01.75.75v13.5a.75.75 0 01-.75.75H15a.75.75 0 01-.75-.75V5.25z" clipRule="evenodd" /></svg>
+        );
+        const ZoomInIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /><line x1="11" y1="8" x2="11" y2="14" /><line x1="8" y1="11" x2="14" y2="11" /></svg>
+        );
+        const ZoomOutIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="11" cy="11" r="8" /><line x1="21" y1="21" x2="16.65" y2="16.65" /><line x1="8" y1="11" x2="14" y2="11" /></svg>
+        );
+        const PlusIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="12" y1="5" x2="12" y2="19" /><line x1="5" y1="12" x2="19" y2="12" /></svg>
+        );
+        const Trash2Icon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polyline points="3 6 5 6 21 6" /><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" /><line x1="10" y1="11" x2="10" y2="17" /><line x1="14" y1="11" x2="14" y2="17" /></svg>
+        );
+        const DownloadIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="7 10 12 15 17 10" /><line x1="12" y1="15" x2="12" y2="3" /></svg>
+        );
+        const UploadIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" /><polyline points="17 8 12 3 7 8" /><line x1="12" y1="3" x2="12" y2="15" /></svg>
+        );
+        const SettingsIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+        );
+        const ClockIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>
+        );
+        const GamepadIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><line x1="6" x2="10" y1="11" y2="11" /> <line x1="8" x2="8" y1="9" y2="13" /> <line x1="15" x2="15.01" y1="13" y2="13" /> <line x1="18" x2="18.01" y1="11" y2="11" /> <rect width="20" height="12" x="2" y="6" rx="2" /></svg>
+        );
+        const SortIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><path d="m3 16 4 4 4-4"/><path d="M7 20V4"/><path d="M11 4h10"/><path d="M11 8h7"/><path d="M11 12h4"/></svg>
+        );
+        const DragHandleIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="9" cy="12" r="1"/><circle cx="9" cy="5" r="1"/><circle cx="9" cy="19" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="15" cy="5" r="1"/><circle cx="15" cy="19" r="1"/></svg>
+        );
+        const VolumeIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" /><path d="M15.54 8.46a5 5 0 0 1 0 7.07" /><path d="M19.07 4.93a10 10 0 0 1 0 14.14" /></svg>
+        );
+        const GlobeIcon = ({ size = 20, ...props }) => (
+            <svg xmlns="http://www.w3.org/2000/svg" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...props}><circle cx="12" cy="12" r="10"/><line x1="2" x2="22" y1="12" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        );
+
+        // --- 번역 데이터 ---
+        const translations = {
+            ko: {
+                title: "Avoidance Count Stepper",
+                loadMusic: "음악 불러오기",
+                noFile: "파일을 선택해주세요",
+                speed: "속도 조절",
+                precision: "정밀",
+                slow: "느리게",
+                normal: "정상",
+                currentFrame: "Current Frame",
+                addMarker: "마커 추가",
+                patternList: "Pattern List",
+                sort: "정렬",
+                copyGML: "GML Array 복사",
+                emptyList: "재생 중 원하는 위치에서",
+                emptyListBold1: "[마커 추가]",
+                emptyList2: "버튼이나",
+                emptyListBold2: "[M]",
+                emptyList3: "키를 누르세요.",
+                frameEdit: "Frame (Edit)",
+                labelComment: "Label (Comment)",
+                actions: "Actions",
+                placeholder: "패턴 설명 입력...",
+                jump: "이동",
+                delete: "삭제",
+                copySuccess: "배열이 복사되었습니다:\n\n",
+                guide: "방향키 좌/우: 1프레임 단위 이동 / 파일을 드래그하여 로드",
+                volume: "볼륨",
+                dropHere: "파일을 여기에 놓으세요"
+            },
+            en: {
+                title: "Avoidance Count Stepper",
+                loadMusic: "Load Music",
+                noFile: "No file selected",
+                speed: "Playback Speed",
+                precision: "Precision",
+                slow: "Slow",
+                normal: "Normal",
+                currentFrame: "Current Frame",
+                addMarker: "Add Marker",
+                patternList: "Pattern List",
+                sort: "Sort",
+                copyGML: "Copy GML Array",
+                emptyList: "Press",
+                emptyListBold1: "[Add Marker]",
+                emptyList2: "button or",
+                emptyListBold2: "[M]",
+                emptyList3: "key to start.",
+                frameEdit: "Frame (Edit)",
+                labelComment: "Label (Comment)",
+                actions: "Actions",
+                placeholder: "Enter description...",
+                jump: "Jump",
+                delete: "Delete",
+                copySuccess: "Array copied to clipboard:\n\n",
+                guide: "Arrow L/R: Move 1 frame / Drag & Drop to load",
+                volume: "Volume",
+                dropHere: "Drop file here"
+            }
+        };
+
+        const AudioAnalyzer = () => {
+            const [wavesurfer, setWavesurfer] = useState(null);
+            const [isPlaying, setIsPlaying] = useState(false);
+            const [currentTime, setCurrentTime] = useState(0);
+            const [duration, setDuration] = useState(0);
+            const [zoomLevel, setZoomLevel] = useState(50);
+            const [fps, setFps] = useState(50); 
+            const [markers, setMarkers] = useState([]);
+            const [playbackRate, setPlaybackRate] = useState(1);
+            const [volume, setVolume] = useState(100); 
+            const [fileName, setFileName] = useState(null);
+            const [isAudioLoaded, setIsAudioLoaded] = useState(false);
+            const [language, setLanguage] = useState('ko');
+            const [isDragging, setIsDragging] = useState(false); // 드래그 상태 추가
+            
+            const dragItem = useRef();
+            const dragOverItem = useRef();
+            
+            const waveformRef = useRef(null);
+            const timelineRef = useRef(null);
+
+            // 현재 언어팩 선택
+            const t = translations[language];
+
+            const toggleLanguage = () => {
+                setLanguage(prev => prev === 'ko' ? 'en' : 'ko');
+            };
+
+            const updateTime = useCallback((ws) => {
+                if (ws) {
+                    const time = ws.getCurrentTime();
+                    setCurrentTime(time);
+                }
+            }, []);
+
+            useEffect(() => {
+                let wsInstance = null;
+                const initWaveSurfer = async () => {
+                    try {
+                        if (!waveformRef.current) return;
+                        if (!window.WaveSurfer) { console.error("WaveSurfer Missing"); return; }
+
+                        wsInstance = WaveSurfer.create({
+                            container: waveformRef.current,
+                            waveColor: '#4ade80',
+                            progressColor: '#22c55e',
+                            cursorColor: '#ef4444', 
+                            cursorWidth: 4, 
+                            barWidth: 2,
+                            barGap: 1,
+                            barRadius: 2,
+                            height: 128,
+                            normalize: true,
+                            minimap: true,
+                            autoCenter: true, 
+                            backend: 'WebAudio',
+                            plugins: [
+                                WaveSurfer.Timeline.create({
+                                    container: timelineRef.current,
+                                    formatTimeCallback: (seconds) => {
+                                        const mins = Math.floor(seconds / 60);
+                                        const secs = Math.floor(seconds % 60);
+                                        return `${mins}:${secs.toString().padStart(2, '0')}`;
+                                    },
+                                    timeInterval: 1,
+                                    primaryLabelInterval: 10,
+                                    style: { fontSize: '10px', color: '#9ca3af' },
+                                }),
+                                WaveSurfer.Zoom.create(),
+                            ],
+                        });
+
+                        wsInstance.on('ready', () => {
+                            setDuration(wsInstance.getDuration());
+                            setIsAudioLoaded(true);
+                            wsInstance.setVolume(1); 
+                        });
+                        
+                        const handleInteraction = () => updateTime(wsInstance);
+
+                        wsInstance.on('audioprocess', handleInteraction); 
+                        wsInstance.on('seek', handleInteraction);         
+                        wsInstance.on('interaction', handleInteraction);  
+                        wsInstance.on('drag', handleInteraction);
+                        wsInstance.on('seeking', handleInteraction);
+                        wsInstance.on('timeupdate', handleInteraction);
+                        
+                        wsInstance.on('pause', () => {
+                            handleInteraction();
+                            setIsPlaying(false);
+                        });
+                        
+                        wsInstance.on('play', () => {
+                            setIsPlaying(true);
+                        });
+
+                        wsInstance.on('finish', () => {
+                            setIsPlaying(false);
+                            handleInteraction();
+                        });
+
+                        setWavesurfer(wsInstance);
+
+                    } catch (error) { console.error("WaveSurfer init failed:", error); }
+                };
+                initWaveSurfer();
+                return () => { if (wsInstance) wsInstance.destroy(); };
+            }, [updateTime]);
+
+            useEffect(() => {
+                if (wavesurfer && isAudioLoaded) {
+                    try { 
+                        wavesurfer.zoom(zoomLevel);
+                    } catch (e) {}
+                }
+            }, [zoomLevel, wavesurfer, isAudioLoaded]);
+
+            useEffect(() => {
+                if (wavesurfer) wavesurfer.setPlaybackRate(playbackRate);
+            }, [playbackRate, wavesurfer]);
+
+            useEffect(() => {
+                if (wavesurfer) {
+                    wavesurfer.setVolume(volume / 100);
+                }
+            }, [volume, wavesurfer]);
+
+            // 파일 처리 공통 함수
+            const processFile = (file) => {
+                if (file && wavesurfer) {
+                    setIsAudioLoaded(false);
+                    setFileName(file.name);
+                    const objectUrl = URL.createObjectURL(file);
+                    wavesurfer.load(objectUrl);
+                    setMarkers([]); 
+                    setIsPlaying(false);
+                }
+            };
+
+            const handleFileUpload = (e) => {
+                const file = e.target.files[0];
+                processFile(file);
+            };
+
+            // 드래그 앤 드롭 핸들러
+            const handleDragOver = (e) => {
+                e.preventDefault();
+                setIsDragging(true);
+            };
+
+            const handleDragLeave = (e) => {
+                e.preventDefault();
+                // 자식 요소로 들어갈 때 깜빡임 방지 (relatedTarget 체크)
+                if (!e.currentTarget.contains(e.relatedTarget)) {
+                    setIsDragging(false);
+                }
+            };
+
+            const handleDrop = (e) => {
+                e.preventDefault();
+                setIsDragging(false);
+                const file = e.dataTransfer.files[0];
+                if (file && file.type.startsWith('audio/')) {
+                    processFile(file);
+                }
+            };
+
+            const togglePlay = () => {
+                if (wavesurfer && isAudioLoaded) {
+                    try {
+                        wavesurfer.playPause();
+                    } catch (e) {}
+                }
+            };
+
+            const addMarker = () => {
+                const frame = Math.round(currentTime * fps);
+                const newMarker = {
+                    id: Date.now(),
+                    time: currentTime,
+                    frame: frame,
+                    label: "" 
+                };
+                setMarkers([...markers, newMarker].sort((a, b) => a.time - b.time));
+            };
+
+            const deleteMarker = (id) => setMarkers(markers.filter(m => m.id !== id));
+            
+            const jumpToMarker = (time) => {
+                if (wavesurfer && isAudioLoaded) {
+                    wavesurfer.setTime(time);
+                    updateTime(wavesurfer);
+                }
+            };
+
+            const exportMarkers = () => {
+                let gmlString = "[\n";
+                markers.forEach((m, index) => {
+                    const isLast = index === markers.length - 1;
+                    const comment = m.label.trim() ? ` /* ${m.label} */` : "";
+                    gmlString += `  ${m.frame}${isLast ? "" : ","}${comment}\n`;
+                });
+                gmlString += "]";
+
+                navigator.clipboard.writeText(gmlString).then(() => {
+                    alert(t.copySuccess + gmlString);
+                });
+            };
+
+            const formatTime = (seconds) => {
+                if (!seconds && seconds !== 0) return "0:00.00";
+                const mins = Math.floor(seconds / 60);
+                const secs = Math.floor(seconds % 60);
+                const ms = Math.floor((seconds % 1) * 100);
+                return `${mins}:${secs.toString().padStart(2, '0')}.${ms.toString().padStart(2, '0')}`;
+            };
+
+            const currentFrame = Math.round(currentTime * fps);
+
+            const dragStart = (e, position) => {
+                dragItem.current = position;
+            };
+
+            const dragEnter = (e, position) => {
+                dragOverItem.current = position;
+            };
+
+            const drop = (e) => {
+                const copyListItems = [...markers];
+                const dragItemContent = copyListItems[dragItem.current];
+                copyListItems.splice(dragItem.current, 1);
+                copyListItems.splice(dragOverItem.current, 0, dragItemContent);
+                dragItem.current = null;
+                dragOverItem.current = null;
+                setMarkers(copyListItems);
+            };
+            
+            const sortByFrame = () => {
+                const sorted = [...markers].sort((a, b) => a.frame - b.frame);
+                setMarkers(sorted);
+            };
+
+            const handleFrameChange = (id, newFrameValue) => {
+                const newFrame = parseInt(newFrameValue);
+                if (isNaN(newFrame)) return;
+
+                const newTime = newFrame / fps;
+                
+                const newMarkers = markers.map(m => {
+                    if (m.id === id) {
+                        return { ...m, frame: newFrame, time: newTime, label: m.label };
+                    }
+                    return m;
+                });
+                setMarkers(newMarkers);
+                
+                if (wavesurfer && isAudioLoaded) {
+                    wavesurfer.setTime(newTime);
+                    updateTime(wavesurfer);
+                }
+            };
+
+            useEffect(() => {
+                const handleKeyDown = (e) => {
+                    if (e.target.tagName === 'INPUT') return;
+
+                    if (e.code === 'Space') {
+                        e.preventDefault();
+                        togglePlay();
+                    }
+                    if (e.code === 'KeyM') {
+                        addMarker();
+                    }
+                    if (e.code === 'ArrowLeft') {
+                        e.preventDefault();
+                        if(wavesurfer && isAudioLoaded) {
+                            const frameTime = 1 / fps;
+                            const targetTime = Math.max(0, currentTime - frameTime);
+                            wavesurfer.setTime(targetTime);
+                            updateTime(wavesurfer);
+                        }
+                    }
+                    if (e.code === 'ArrowRight') {
+                        e.preventDefault();
+                        if(wavesurfer && isAudioLoaded) {
+                            const frameTime = 1 / fps;
+                            const targetTime = Math.min(duration, currentTime + frameTime);
+                            wavesurfer.setTime(targetTime);
+                            updateTime(wavesurfer);
+                        }
+                    }
+                };
+                window.addEventListener('keydown', handleKeyDown);
+                return () => window.removeEventListener('keydown', handleKeyDown);
+            }, [wavesurfer, isPlaying, currentTime, fps, markers, isAudioLoaded, duration, updateTime]);
+
+            return (
+                <div 
+                    className="flex flex-col h-screen bg-gray-900 text-gray-100 font-sans overflow-hidden relative"
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                >
+                    {/* 드래그 오버레이 */}
+                    {isDragging && (
+                        <div className="absolute inset-0 bg-black/80 z-50 flex items-center justify-center border-4 border-dashed border-green-500 m-4 rounded-xl pointer-events-none">
+                            <p className="text-3xl font-bold text-green-500 animate-pulse">{t.dropHere}</p>
+                        </div>
+                    )}
+
+                    <div className="p-4 bg-gray-800 border-b border-gray-700 shadow-lg z-10">
+                        <div className="flex justify-between items-center mb-4">
+                            <h1 className="text-xl font-bold flex items-center gap-2 text-green-400">
+                                {t.title}
+                            </h1>
+                            <div className="flex gap-4">
+                                <div className="flex items-center gap-4 bg-gray-700 px-4 py-2 rounded-lg">
+                                    <div className="flex items-center gap-2">
+                                        <ClockIcon size={16} className="text-gray-400" />
+                                        <span className="text-sm font-semibold">ROOM SPEED (FPS):</span>
+                                        <input 
+                                            type="number" 
+                                            value={fps} 
+                                            onChange={(e) => setFps(Number(e.target.value))}
+                                            className="w-16 bg-gray-600 border border-gray-500 rounded px-2 py-1 text-center focus:outline-none focus:border-green-500"
+                                        />
+                                    </div>
+                                </div>
+                                <button 
+                                    onClick={toggleLanguage}
+                                    className="flex items-center gap-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg text-sm font-bold text-gray-200 transition"
+                                >
+                                    <GlobeIcon size={16} />
+                                    {language === 'ko' ? 'KO' : 'EN'}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex flex-wrap gap-4 items-center justify-between">
+                            <div className="flex items-center gap-3">
+                                <label className="flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded cursor-pointer transition">
+                                    <UploadIcon size={18} />
+                                    <span>{t.loadMusic}</span>
+                                    <input type="file" accept="audio/*" onChange={handleFileUpload} className="hidden" />
+                                </label>
+                                <div className="text-sm text-gray-400 truncate max-w-[200px]">{fileName || t.noFile}</div>
+                                
+                                <div className="h-8 w-[1px] bg-gray-600 mx-2"></div>
+
+                                <button 
+                                    onClick={togglePlay} 
+                                    disabled={!isAudioLoaded}
+                                    className={`p-3 rounded-full transition shadow-lg ${!isAudioLoaded ? 'opacity-50 cursor-not-allowed' : ''} ${isPlaying ? 'bg-yellow-500 hover:bg-yellow-600 text-black' : 'bg-green-500 hover:bg-green-600 text-black'}`}
+                                >
+                                    {isPlaying ? <PauseIcon size={24} /> : <PlayIcon size={24} />}
+                                </button>
+                                
+                                <div className="flex flex-col text-xs text-gray-400 ml-2">
+                                    <span>{t.speed}</span>
+                                    <select 
+                                        value={playbackRate} 
+                                        onChange={(e) => setPlaybackRate(Number(e.target.value))}
+                                        className="bg-gray-700 border border-gray-600 rounded mt-1"
+                                    >
+                                        <option value={0.25}>0.25x ({t.precision})</option>
+                                        <option value={0.5}>0.5x ({t.slow})</option>
+                                        <option value={1}>1.0x ({t.normal})</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col items-center bg-black px-8 py-2 rounded border border-green-900 shadow-lg ring-1 ring-green-900/50">
+                                <span className="text-xs text-gray-500 uppercase tracking-wider">{t.currentFrame}</span>
+                                <span className="text-3xl font-mono text-green-400 font-bold drop-shadow-md">{currentFrame}</span>
+                                <span className="text-xs text-gray-500">{formatTime(currentTime)} / {formatTime(duration)}</span>
+                            </div>
+
+                            <div className="flex items-center gap-3">
+                                {/* 볼륨 컨트롤 */}
+                                <div className="flex items-center gap-2 mr-4 group relative">
+                                    <VolumeIcon size={18} className="text-gray-400 group-hover:text-green-400 transition" />
+                                    <input 
+                                        type="range" 
+                                        min="0" 
+                                        max="200" 
+                                        value={volume} 
+                                        onChange={(e) => setVolume(Number(e.target.value))}
+                                        className="w-20 accent-green-500 h-1 bg-gray-600 rounded-lg appearance-none cursor-pointer"
+                                        title={`${t.volume}: ${volume}%`}
+                                    />
+                                    <span className="text-xs text-gray-500 w-8 text-right">{volume}%</span>
+                                </div>
+
+                                <ZoomOutIcon size={18} className="text-gray-400" />
+                                <input 
+                                    type="range" 
+                                    min="10" 
+                                    max="500" 
+                                    value={zoomLevel} 
+                                    onChange={(e) => setZoomLevel(Number(e.target.value))}
+                                    disabled={!isAudioLoaded}
+                                    className="w-32 accent-green-500"
+                                />
+                                <ZoomInIcon size={18} className="text-gray-400" />
+                                
+                                <button 
+                                    onClick={addMarker}
+                                    className="ml-4 flex items-center gap-2 px-4 py-2 bg-gray-700 hover:bg-gray-600 border border-gray-600 rounded transition shadow-md"
+                                    title="Shortcut: M"
+                                >
+                                    <PlusIcon size={18} className="text-green-400" />
+                                    <span>{t.addMarker}</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="flex-1 overflow-hidden relative bg-black flex flex-col justify-center">
+                        <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-red-500/50 z-20 pointer-events-none border-r border-red-500/30"></div>
+
+                        <div className="w-full px-4 relative z-10" id="waveform-container">
+                            <div ref={waveformRef} className="w-full"></div>
+                            <div ref={timelineRef} className="w-full"></div>
+                        </div>
+                        
+                        {!isAudioLoaded && (
+                            <div className="absolute inset-0 flex items-center justify-center text-gray-600 flex-col gap-4">
+                                <GamepadIcon size={48} className="opacity-20" />
+                                <p>{language === 'ko' ? '음악 파일을 불러오면 파형이 표시됩니다.' : 'Load an audio file to see the waveform.'}</p>
+                                <p className="text-sm opacity-50">{t.guide}</p>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="h-1/3 bg-gray-800 border-t border-gray-700 flex flex-col">
+                        <div className="p-3 bg-gray-800 border-b border-gray-700 flex justify-between items-center shadow-md z-10">
+                            <h3 className="font-semibold text-gray-300 flex items-center gap-2">
+                                <SettingsIcon size={16} />
+                                {t.patternList} ({markers.length})
+                            </h3>
+                            <div className="flex gap-2">
+                                <button
+                                    onClick={sortByFrame}
+                                    className="flex items-center gap-2 px-3 py-1 bg-gray-700 hover:bg-gray-600 text-sm rounded text-gray-200 transition"
+                                    title={t.sort}
+                                >
+                                    <SortIcon size={14} />
+                                    {t.sort}
+                                </button>
+                                <button 
+                                    onClick={exportMarkers}
+                                    className="flex items-center gap-2 px-3 py-1 bg-green-700 hover:bg-green-600 text-sm rounded text-white transition shadow-sm"
+                                >
+                                    <DownloadIcon size={14} />
+                                    {t.copyGML}
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div className="flex-1 overflow-y-auto p-2">
+                            {markers.length === 0 ? (
+                                <div className="text-center text-gray-500 py-8 text-sm flex flex-col items-center gap-2">
+                                    <span>
+                                        {t.emptyList} <b>{t.emptyListBold1}</b> {t.emptyList2} <b>{t.emptyListBold2}</b> {t.emptyList3}
+                                    </span>
+                                </div>
+                            ) : (
+                                <table className="w-full text-left text-sm text-gray-300">
+                                    <thead className="bg-gray-900 text-gray-500 sticky top-0 shadow-sm z-0">
+                                        <tr>
+                                            <th className="p-2 w-10"></th>
+                                            <th className="p-2 w-16">#</th>
+                                            <th className="p-2 w-32">{t.frameEdit}</th>
+                                            <th className="p-2">{t.labelComment}</th>
+                                            <th className="p-2 text-right">{t.actions}</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-700">
+                                        {markers.map((marker, idx) => (
+                                            <tr 
+                                                key={marker.id} 
+                                                className="hover:bg-gray-700 transition group draggable-item"
+                                                draggable
+                                                onDragStart={(e) => dragStart(e, idx)}
+                                                onDragEnter={(e) => dragEnter(e, idx)}
+                                                onDragEnd={drop}
+                                                onDragOver={(e) => e.preventDefault()}
+                                            >
+                                                <td className="p-2 text-gray-600 cursor-grab active:cursor-grabbing">
+                                                    <DragHandleIcon size={16} />
+                                                </td>
+                                                <td className="p-2 text-gray-500">{idx + 1}</td>
+                                                <td className="p-2">
+                                                    <input 
+                                                        type="number" 
+                                                        value={marker.frame}
+                                                        onChange={(e) => handleFrameChange(marker.id, e.target.value)}
+                                                        className="bg-gray-800 border border-gray-600 rounded px-2 py-1 w-24 text-green-400 font-bold font-mono focus:border-green-500 outline-none"
+                                                    />
+                                                </td>
+                                                <td className="p-2">
+                                                    <input 
+                                                        type="text" 
+                                                        value={marker.label}
+                                                        onChange={(e) => {
+                                                            const newMarkers = markers.map(m => m.id === marker.id ? {...m, label: e.target.value} : m);
+                                                            setMarkers(newMarkers);
+                                                        }}
+                                                        className="bg-transparent border-b border-transparent focus:border-green-500 outline-none text-gray-200 w-full placeholder-gray-600"
+                                                        placeholder={t.placeholder}
+                                                    />
+                                                </td>
+                                                <td className="p-2 text-right">
+                                                    <button onClick={() => jumpToMarker(marker.time)} className="p-1 hover:text-green-400 mr-2 transition" title={t.jump}>
+                                                        <PlayIcon size={14} />
+                                                    </button>
+                                                    <button onClick={() => deleteMarker(marker.id)} className="p-1 hover:text-red-400 transition" title={t.delete}>
+                                                        <Trash2Icon size={14} />
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<AudioAnalyzer />);
+    </script>
+</body>
+</html>

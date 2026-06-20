@@ -6,7 +6,6 @@
 #macro DANMAKU_FOCAL_LENGTH DANMAKU_SCREEN_WIDTH / (2 * dtan(DANMAKU_FOV / 2))
 #macro DANMAKU_INCOLLIDABLE_BULLET_ALPHA 0.1
 #macro ENABLE_PARTICLE_SYSTEM true
+#macro DANMAKU_BLOCK_PARENT undefined
 
 global.danmaku_particle_system = ENABLE_PARTICLE_SYSTEM ? part_system_create() : undefined;
-
-

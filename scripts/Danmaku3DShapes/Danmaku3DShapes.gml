@@ -1,5 +1,3 @@
-#region 3D shapes
-
 function make_sphere_danmaku(_x, _y, _z, _circle_amount, _bullets_per_circle, _size, _layer, _obj){
     if(!object_is_ancestor(_obj, obj_danmaku_parents)){
         return;
@@ -405,5 +403,3 @@ function make_lines_danmaku3d(_x, _y, _z, _n, _bullets_per_line, _dir_offset, _s
     
     return new Danmaku3D(_x, _y, _z, _insts);
 }
-
-#endregion

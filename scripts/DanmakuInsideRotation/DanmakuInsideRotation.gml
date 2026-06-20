@@ -1,5 +1,6 @@
 function rotate_inside_circle_danmaku(_danmaku, _inside_rotation){
     var _n = _danmaku.inside_rotation_param.n;
+    var _cnt = 0;
     var _start_dir = _danmaku.inside_rotation_param.dir_offset;
 	var _end_dir = _danmaku.inside_rotation_param.dir_offset + 360;
     _start_dir += _inside_rotation;
@@ -10,6 +11,7 @@ function rotate_inside_circle_danmaku(_danmaku, _inside_rotation){
 		var _yy = lengthdir_y(_danmaku.inside_rotation_param.size, _dir);
 		_danmaku.insts[_cnt].x = _xx;
         _danmaku.insts[_cnt].y = _yy;
+        _cnt++;
 	}
 }
 

@@ -1,9 +1,40 @@
-if(zspeed != 0){
+
+if (direction_inc != 0) {
+    direction += direction_inc;
+}
+
+if (zspeed != 0 || zgrav != 0) {
+    zspeed += zgrav;
     z += zspeed;
 }
 
-if(direction_speed != 0){
-    direction += direction_speed;
+if (homing_target != noone && instance_exists(homing_target)) {
+    var _target_dir = point_direction(x, y, homing_target.x, homing_target.y);
+    var _diff = angle_difference(direction, _target_dir);
+    
+    direction -= clamp(_diff, -homing_speed, homing_speed);
+    
+    if (homing_limit_time > 0) {
+        homing_limit_time--;
+        if (homing_limit_time <= 0) homing_target = noone;
+    }
+}
+
+if (bounce && DANMAKU_BLOCK_PARENT != undefined) {
+    if (place_meeting(x + hspeed, y, DANMAKU_BLOCK_PARENT)) {
+        while (!place_meeting(x + sign(hspeed), y, DANMAKU_BLOCK_PARENT)) {
+            x += sign(hspeed);
+        }
+        hspeed = -hspeed;
+    }
+    
+    if (place_meeting(x, y + vspeed, DANMAKU_BLOCK_PARENT)) {
+        while (!place_meeting(x, y + sign(vspeed), DANMAKU_BLOCK_PARENT)) {
+            y += sign(vspeed);
+        }
+
+        vspeed = -vspeed;
+    }
 }
 
 if(ENABLE_PARTICLE_SYSTEM && particle_emitter != undefined){
@@ -19,6 +50,8 @@ if(ENABLE_PARTICLE_SYSTEM && particle_emitter != undefined){
         }
     }
     
+	var _amount, _hue, _dir;
+	
     switch(particle_color_type){
         case 1:
             part_type_color2(particle_type, particle_sub_color1, particle_sub_color2);
@@ -27,20 +60,20 @@ if(ENABLE_PARTICLE_SYSTEM && particle_emitter != undefined){
             part_type_color3(particle_type, particle_sub_color1, particle_sub_color2, particle_sub_color3);
             break;
         case 3:
-            var _amount = clamp(x, particle_min_x, particle_max_x) - particle_min_x;
+            _amount = clamp(x, particle_min_x, particle_max_x) - particle_min_x;
             _amount /= particle_max_x - particle_min_x;
-            var _hue = lerp(particle_min_hue, particle_max_hue, _amount);
+            _hue = lerp(particle_min_hue, particle_max_hue, _amount);
             part_type_color1(particle_type, make_color_hsv(_hue, particle_sat, particle_val));
             break;
         case 4:
-            var _amount = clamp(y, particle_min_y, particle_max_y) - particle_min_y;
+            _amount = clamp(y, particle_min_y, particle_max_y) - particle_min_y;
             _amount /= particle_max_y - particle_min_y;
-            var _hue = lerp(particle_min_hue, particle_max_hue, _amount);
+            _hue = lerp(particle_min_hue, particle_max_hue, _amount);
             part_type_color1(particle_type, make_color_hsv(_hue, particle_sat, particle_val));
             break;
         case 5:
-            var _dir = point_direction(particle_center_x, particle_center_y, x, y);
-            var _hue = lerp(particle_min_hue, particle_max_hue, danmaku_get_axis_clamped_value(_dir + particle_dir_offset) / 360);
+            _dir = point_direction(particle_center_x, particle_center_y, x, y);
+            _hue = lerp(particle_min_hue, particle_max_hue, danmaku_get_axis_clamped_value(_dir + particle_dir_offset) / 360);
             part_type_color1(particle_type, make_color_hsv(_hue, particle_sat, particle_val));
             break;
     }
@@ -77,6 +110,22 @@ if(!enable_collision_over_focal_length){
 
 if(!collision){
     mask_index = spr_danmaku_noone;
+}
+
+if(outsidekill){
+    var _margin = 100;
+    if (x < -_margin || x > room_width + _margin || y < -_margin || y > room_height + _margin) {
+        if(particle_emitter != undefined){
+            destroy = true;
+            destroy_time = particle_life;
+            destroy_time_limit = max(1, particle_life);
+            destroy_alpha = alpha;
+            outsidekill = false;
+        }
+        else{
+            instance_destroy();
+        }
+    }
 }
 
 if(destroy){
